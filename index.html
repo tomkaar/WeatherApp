@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Geolocation</title>
+    <meta name="viewport" content="initial-scale=1.0, user-scalable=no">
+    <meta charset="utf-8">
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+  </head>
+  <body>
+
+
+    <div id="loadLocation" class="loadLocation">
+      <p>Finding your location!</p>
+      <div class="spinner spinner-20">
+        <span></span>
+        <span></span>
+        <span></span>
+      </div>
+    </div>
+
+
+    <div id="map"></div>
+    <div id="content">
+      <div id="errorMessage"></div>
+
+      <button onclick="getMyLocation()" class="findMeBtn">Current Position</button>
+
+      <div id="current-geo">
+        <div id="currentLat"></div>
+        <div id="currentLng"></div>
+      </div>
+      <div id="weather">
+        <p id="type"></p>
+      </div>
+
+
+      <div id="weatherBuild">
+
+        <div id="today">
+          <div id="today_top"></div>
+          <div id="location" class="location">Finding your location</div>
+          <div id="today_bottom"></div>
+        </div>
+
+      </div>
+    </div>
+
+
+
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBDo7tpI5x9bSchjR1bdIW66_CRbHcicyU"></script>
+    <script src="app.js"></script>
+
+  </body>
+</html>

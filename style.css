@@ -1,0 +1,169 @@
+*, *:before, *:after{
+  margin: 0;
+  padding: 0;
+}
+html, body {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  background: white;
+  font-family: 'Open Sans', sans-serif;
+}
+
+
+
+
+
+
+#map {
+  float: left;
+  height: 100%;
+  width: 50%;
+}
+#content{
+  float: left;
+  width: 50%;
+  height: 100%;
+}
+.loadLocation{
+  display: none;
+  color: white;
+  text-align: center;
+  font-size: 70px;
+  z-index: 10000;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.4);
+}
+  .loadLocation p{
+    width: 100%;
+  }
+  .loadLocation.visible{
+    display: flex !important;
+    align-items: center;
+    flex-wrap: nowrap;
+    flex-direction: column;
+    justify-content: center;
+  }
+
+  .spinner {
+    width: 100px;
+    height: 100px;
+    background: #eee;
+    border-radius: 50%;
+    position: relative;
+    margin: 0px;
+    display: inline-block;
+  }
+  .spinner:after, .spinner:before {
+    content: "";
+    display: block;
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+  }
+  .spinner-20{
+    background: transparent;
+  }
+  .spinner-20 span{
+    display: block;
+    position: absolute;
+    border-radius: 50%;
+    width: 20px;
+    height: 20px;
+    bottom: 30px;
+    background: white;
+  }
+  .spinner-20 span:nth-child(1){
+    animation: s20 2s ease-in-out infinite;
+    left: 0;
+  }
+  .spinner-20 span:nth-child(2){
+    animation: s20 2s ease-in-out 0.66s infinite;
+    left: 30px;
+    opacity: 0.4;
+  }
+  .spinner-20 span:nth-child(3){
+    animation: s20 2s ease-in-out 1.33s infinite;
+    left: 60px;
+    opacity: 0.4;
+  }
+
+  @keyframes s20{
+    0%{
+      opacity: 0.4;
+    }
+    33.333%{
+      opacity: 1;
+    }
+    66.666%{
+      opacity: 0.4;
+    }
+    100%{
+      opacity: 0.4;
+    }
+  }
+
+
+
+#today_top{
+  position: relative;
+  margin: 90px 0 0 0;
+  padding: 30px 0 0 0;
+  /* background: url(icons.png) */
+}
+
+
+
+.today_temp{
+  text-align: center;
+  font-size: 60px;
+  line-height: 1;
+}
+.today_temp span{
+  font-size: 20px;
+}
+.today_type, .today_date{
+  padding: 5px 0;
+  text-align: center;
+  color: #565656;
+  text-transform: capitalize;
+}
+.today_temp{
+  position: relative;
+  z-index: 2;
+}
+.today_img{
+  position: absolute;
+  z-index: 1;
+  top: 0;
+  left: 50%;
+  width: 100px;
+  height: 100px;
+  border: 1px solid black;
+  
+  background-size: 300px 100px;
+}
+
+
+
+.location{
+  padding: 20px 0 0px 0;
+  text-align: center;
+  font-size: 27px;
+}
+
+
+.findMeBtn{
+  position: fixed;
+  top: 40px;
+  left: 40px;
+  appearance: none;
+  -webkit-appearance: none;
+  margin:
+  padding: 5px 7px;
+  background: white;
+}
