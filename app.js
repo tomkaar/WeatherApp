@@ -117,6 +117,8 @@ function map(id, zoom, controls){
     geocoder.geocode({ 'location': {lat: lat, lng: lng} }, function (results, status) {
       if( status == google.maps.GeocoderStatus.OK ) {
         callback(results[0]);
+      } else {
+        today.innerHTML = "No results found.";
       }
     });
   }
@@ -186,7 +188,7 @@ function showError(error) {
   }
 }
 
-
+// Load weather from SMHI Web API
 async function loadWeather(lat, lng){
   let lat2 = lat.toFixed(0);
   let lng2 = lng.toFixed(0);
@@ -224,10 +226,17 @@ function buildWeather(response){
     createType.setAttribute("class", "today_type");
 
   let location = document.createElement("p");
+
+  // if position is found in Google Maps
+  if(getParamGeo("administrative_area_level_1").length > 0 && getParamGeo("postal_town").length > 0){
     let postal_town = getParamGeo("postal_town")[0].long_name;
     let lan = getParamGeo("administrative_area_level_1")[0].long_name;
     location.innerHTML = postal_town + ", " + lan;
     location.setAttribute("class", "today_location");
+  } else {
+    location.innerHTML = "Position Undefined";
+    location.setAttribute("class", "today_location");
+  }
 
   let createDate = document.createElement("p");
     createDate.innerHTML = days[today_date.getDay()] + ", " + today_date.getDay() +  " " + month[today_date.getMonth()] + " " + addZero(today_date.getHours()) + ":" + addZero(today_date.getMinutes());

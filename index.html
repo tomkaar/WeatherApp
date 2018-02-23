@@ -10,20 +10,24 @@
   <body>
 
     <div id="map"></div>
+
+    <button onclick="getMyLocation()" class="findMeBtn">Current Position</button>
+
+    <div id="loadingScreen" class="loadingScreen visible">
+      <div class="lsContent">
+        <p>Finding your location!</p>
+        <div class="spinner spinner-20">
+          <span></span>
+          <span></span>
+          <span></span>
+        </div>
+      </div>
+    </div>
+
     <div id="content">
       <div id="errorMessage"></div>
 
-      <button onclick="getMyLocation()" class="findMeBtn">Current Position</button>
-
       <div id="weatherBuild">
-        <div id="loadingScreen" class="loadingScreen">
-          <p>Finding your location!</p>
-          <div class="spinner spinner-20">
-            <span></span>
-            <span></span>
-            <span></span>
-          </div>
-        </div>
         <div id="today"></div>
         <div id="future"></div>
       </div>
