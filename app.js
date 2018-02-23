@@ -1,27 +1,26 @@
-
-var days = [
-  "Sunday",
-  "Monday",
-  "Tuesday",
-  "Wednesday",
-  "Thursday",
-  "Friday",
-  "Saturday"
-];
-var month = [
-  "Januari",
-  "Februari",
-  "Mars",
-  "April",
-  "Maj",
-  "Juni",
-  "Juli",
-  "Augusti",
-  "September",
-  "Oktober",
-  "November",
-  "December"
-];
+var days = {
+  "0": "Sunday",
+  "1": "Monday",
+  "2": "Tuesday",
+  "3": "Wednesday",
+  "4": "Thursday",
+  "5": "Friday",
+  "6": "Saturday"
+};
+var month = {
+  "0": "Januari",
+  "1": "Februari",
+  "2": "Mars",
+  "3": "April",
+  "4": "Maj",
+  "5": "Juni",
+  "6": "Juli",
+  "7": "Augusti",
+  "8": "September",
+  "9": "Oktober",
+  "10": "November",
+  "11": "December"
+};
 var weatherCodes = {
   "1": "klart",
   "2": "nästan klart",
@@ -52,214 +51,217 @@ var weatherCodes = {
   "27": "tung snöfall"
 };
 
+var weather_klart = [1];
+var weather_molnigt = [6];
+var weather_latt_molnigt = [2, 3, 4, 5];
+var weather_dimma = [7];
+var weather_regn = [8, 9, 10, 18, 19, 20];
+var weather_blixt = [11, 21];
+var weather_hagel = [12, 13, 14, 22, 23, 24];
+var weather_sno = [15, 16, 17, 25, 26, 27];
 
-
-// Positions in HTML
-var errorMessage = document.getElementById("errorMessage");
-var Textlocation = document.getElementById("location");
-var loadLocationMessage = document.getElementById("loadLocation");
-
-// Div to build weather in
 var build = document.getElementById("weatherBuild");
 var today = document.getElementById("today");
-var today_top = document.getElementById("today_top");
-var today_bottom = document.getElementById("today_bottom");
+var future = document.getElementById("future");
 
-// Default positions if geolocation fails /default = Stockholm)
+var currentLocation = document.getElementById("currentLocation");
+var loadLocationMessage = document.getElementById("loadingScreen");
+
 var defaultPositionlat = 59.334591;
 var defaultPositionlng = 18.063240;
 
-// Store Markers so we can target them later
-var currentMarker = [];
 
-// create map
+
 var map = new map("map", 10, true);
-
 function map(id, zoom, controls){
-  // Find container
-  var mapContainer = document.getElementById(id);
+  this.currentLocation = { "lat": defaultPositionlat, "lng": defaultPositionlng};
+  this.currentMarker = [];
+  this.currentGeoCode = [];
 
-  // Set default location to Stockholm
+  var geo = this.currentGeoCode;
+
+  var mapContainer = document.getElementById(id);
   var mapProperties = {
-    center: new google.maps.LatLng(defaultPositionlat, defaultPositionlng),
+    center: {lat: defaultPositionlat, lng: defaultPositionlng},
     zoom: zoom,
-    disableDefaultUI: controls
+    disableDefaultUI: false,
+    mapTypeControlOptions: {
+      style: google.maps.MapTypeControlStyle.HORIZONTAL_BAR,
+      position: google.maps.ControlPosition.TOP_CENTER
+    },
+    fullscreenControl: false,
+    streetViewControl: false,
   }
 
-  // Create map + create Geo Location for Google maps
   var map = new google.maps.Map(mapContainer, mapProperties);
   var geocoder = new google.maps.Geocoder;
 
-  // Change Location function
-  this.setLocation = ((lat, lng) => {
-    // in this case is this = 'map'
-    this.addMarker(lat, lng);
-    this.setCenter(lat, lng);
-    this.getGeoCode(lat, lng);
-    loadWeather(parseFloat(lat), parseFloat(lng));
-  });
-
-  // Replace marker on map
-  this.addMarker = function(lat, lng) {
-
-    // Removes previous marker from map if marker exists
-    if(currentMarker != ""){
-      currentMarker[0].setMap(null);
-    }
-    // create new marker
-    var marker = new google.maps.Marker({
-      position: new google.maps.LatLng(parseFloat(lat), parseFloat(lng)),
-      map: map
-    });
-    // add new marker to map and array
-    marker.setMap(map);
-    currentMarker[0]= marker;
-  }
-
-  // Set center on map (new camera position)
-  this.setCenter = function(lat, lng){
-    map.setCenter(new google.maps.LatLng(lat, lng));
-  };
-
-  // Click to change location on click -> set marker and set center
+  // When you click on map
   map.addListener('click', (e) => {
-    this.addMarker(e.latLng.lat(), e.latLng.lng());
-    loadWeather(e.latLng.lat(), e.latLng.lng());
-    this.getGeoCode(e.latLng.lat(), e.latLng.lng());
+    this.setLocation(e.latLng.lat(), e.latLng.lng());
   });
 
-  this.getGeoCode = function(lat, lng){
-    // print location adress
-    geocoder.geocode({'location': {lat: lat, lng: lng}}, function(results, status) {
-      if (status === 'OK') {
-        if (results[0]) {
-          let postal_town = (results[0].address_components.filter(loc => loc.types == "postal_town"))[0].long_name;
-          let lan = results[0].address_components.filter(loc => loc.types[0] == "administrative_area_level_1")[0].long_name;
-          Textlocation.innerHTML = postal_town + ", " + lan;
-        } else {
-          console.log('No results found');
-        }
-      } else {
-        console.log('Geocoder failed due to: ' + status);
+  // Set location
+  this.setLocation = ((lat, lng, moveTo = false) => {
+    this.updateLocation(lat, lng);
+    this.setMarker(lat, lng);
+    if(moveTo){ this.moveToLocation(lat, lng); }
+    getLocationData(lat, lng, function(locationData) {
+      geo[0] = locationData;
+      loadWeather(lat, lng);
+    });
+  });
+
+  // get Location Data
+  function getLocationData(lat, lng, callback) {
+    geocoder.geocode({ 'location': {lat: lat, lng: lng} }, function (results, status) {
+      if( status == google.maps.GeocoderStatus.OK ) {
+        callback(results[0]);
       }
     });
   }
 
+  // Update Location in array
+  this.updateLocation = ((lat, lng) => { this.currentLocation = { "lat": lat, "lng": lng} });
 
+  // set marker
+  this.setMarker = ((lat, lng) => {
+    if(this.currentMarker != ""){ this.currentMarker[0].setMap(null); }
+    var marker = new google.maps.Marker({
+      position: new google.maps.LatLng(parseFloat(lat), parseFloat(lng)),
+      map: map
+    });
+    marker.setMap(map);
+    this.currentMarker[0] = marker;
+  });
+
+  // Move to location - option
+  this.moveToLocation = ((lat, lng) => {
+    map.setCenter(new google.maps.LatLng(lat, lng));
+  });
+
+  this.getCurrentGeoCode = function(){ return this.currentGeoCode[0]};
+  this.getCurrentLocation = function(){ return this.currentLocation};
+  this.getCurrentMarker = function(){ return this.currentMarker};
 }
 
 
 
-// Geo location with HTML5 Geolocation
-  // Run when page loads
-  getMyLocation();
-  function getMyLocation() {
-    if (navigator.geolocation) {
-      loadLocationMessage.classList.add("visible");
-      navigator.geolocation.getCurrentPosition(function(position){
-        map.setLocation(position.coords.latitude, position.coords.longitude);
-        map.getGeoCode(position.coords.latitude, position.coords.longitude);
-        loadLocationMessage.classList.remove("visible");
-      }, showError);
-    } else {
-      map.setLocation(defaultPositionlat, defaultPositionlng);
-    }
+getMyLocation();
+function getMyLocation() {
+  if (navigator.geolocation) {
+    loadLocationMessage.classList.add("visible");
+    navigator.geolocation.getCurrentPosition(function(position){
+      map.setLocation(position.coords.latitude, position.coords.longitude, true);
+      loadLocationMessage.classList.remove("visible");
+    }, showError);
+  } else {
+    map.setLocation(defaultPositionlat, defaultPositionlng);
   }
+}
 
-  // Error handlers for HTML5 Geolocation
-  // if error -> set default location to default coordinates
-  function showError(error) {
-    switch(error.code) {
-      case error.PERMISSION_DENIED:
-          errorMessage.innerHTML = "User denied the request for Geolocation. Position set to Stockholm.";
-          map.setLocation(defaultPositionlat, defaultPositionlng);
-            loadLocationMessage.classList.remove("visible");
-          break;
-      case error.POSITION_UNAVAILABLE:
-          errorMessage.innerHTML = "Location information is unavailable. Position set to Stockholm.";
-          map.setLocation(defaultPositionlat, defaultPositionlng);
-            loadLocationMessage.classList.remove("visible");
-          break;
-      case error.TIMEOUT:
-          errorMessage.innerHTML = "The request to get user location timed out. Position set to Stockholm.";
-          map.setLocation(defaultPositionlat, defaultPositionlng);
-            loadLocationMessage.classList.remove("visible");
-          break;
-      case error.UNKNOWN_ERROR:
-          errorMessage.innerHTML = "An unknown error occurred. Position set to Stockholm.";
-          map.setLocation(defaultPositionlat, defaultPositionlng);
-            loadLocationMessage.classList.remove("visible");
-          break;
-    }
+// errors for Geo Location
+function showError(error) {
+  switch(error.code) {
+    case error.PERMISSION_DENIED:
+      errorMessage.innerHTML = "User denied the request for Geolocation. Position set to Stockholm.";
+      map.setLocation(defaultPositionlat, defaultPositionlng, true);
+      loadLocationMessage.classList.remove("visible");
+      break;
+    case error.POSITION_UNAVAILABLE:
+      errorMessage.innerHTML = "Location information is unavailable. Position set to Stockholm.";
+      map.setLocation(defaultPositionlat, defaultPositionlng, true);
+      loadLocationMessage.classList.remove("visible");
+      break;
+    case error.TIMEOUT:
+      errorMessage.innerHTML = "The request to get user location timed out. Position set to Stockholm.";
+      map.setLocation(defaultPositionlat, defaultPositionlng, true);
+      loadLocationMessage.classList.remove("visible");
+      break;
+    case error.UNKNOWN_ERROR:
+      errorMessage.innerHTML = "An unknown error occurred. Position set to Stockholm.";
+      map.setLocation(defaultPositionlat, defaultPositionlng, true);
+      loadLocationMessage.classList.remove("visible");
+      break;
   }
+}
 
 
-
-// AJAX request to SMHI web API with coordinates from Google Maps
-function loadWeather(lat, lng){
-  lat2 = lat.toFixed(6);
-  lng2 = lng.toFixed(6);
-
-  var ajaxRequest = new XMLHttpRequest();
-  ajaxRequest.onreadystatechange = function(){
-    if(ajaxRequest.readyState == 4 && ajaxRequest.status == 200){
-      let response = JSON.parse(this.response);
-      buildWeather(response);
-    }
-  }
-  // Get weather data from location from SMHI
-  ajaxRequest.open('GET', 'https://opendata-download-metfcst.smhi.se/api/category/pmp3g/version/2/geotype/point/lon/'+lng2+'/lat/'+lat2+'/data.json', true);
-  ajaxRequest.send();
+async function loadWeather(lat, lng){
+  let lat2 = lat.toFixed(0);
+  let lng2 = lng.toFixed(0);
+  let url = 'https://opendata-download-metfcst.smhi.se/api/category/pmp3g/version/2/geotype/point/lon/'+lng2+'/lat/'+lat2+'/data.json';
+  let promise = await fetch(url).then( async function(data){
+    let response = await data.json();
+    buildWeather(response);
+  });
 }
 
 
 
-// Use the response from SMHI to build the weather on page
+
+// Build Weather
 function buildWeather(response){
   console.log(response);
+  console.log(map.getCurrentGeoCode());
 
-  // clear html
-  today_top.innerHTML = "";
-  today_bottom.innerHTML = "";
+  today.innerHTML = "";
 
-  // Build todays weather
-    // Create date object with the time from SMHI page
-    var today_date = new Date(response.timeSeries[0].validTime);
-    var today_temp = response.timeSeries[0].parameters.filter( name => name.name == "t")[0].values[0];
-      var today_temp_type = response.timeSeries[0].parameters.filter( name => name.name == "t")[0].unit;
-        if(today_temp_type == "Cel"){ today_temp_type = "°"; }
-    var today_type = weatherCodes[ response.timeSeries[0].parameters.filter( name => name.name == "Wsymb2" )[0].values[0] - 1 ];
+  var today_date = new Date();
 
-    let createTemp = document.createElement("p");
-      createTemp.innerHTML = today_temp + today_temp_type;
-      createTemp.setAttribute("class", "today_temp");
+  var today_temp = getParam("t")[0].values[0];
+  var today_temp_type = getParam("t")[0].unit;
+  var today_type = weatherCodes[ getParam("Wsymb2")[0].values[0] ];
 
-    let createType = document.createElement("p");
-      createType.innerHTML = today_type;
-      createType.setAttribute("class", "today_type");
+  if(today_temp_type == "Cel"){ today_temp_type = "°"; }
 
-    let createTypeImg = document.createElement("div");
-      createTypeImg.setAttribute("class", "today_img");
+  let createTemp = document.createElement("p");
+    createTemp.innerHTML = today_temp + today_temp_type;
+    createTemp.setAttribute("class", "today_temp");
 
-    let createDate = document.createElement("p");
-      createDate.innerHTML = days[today_date.getDay()] + ", " + today_date.getDay() +  " " + month[today_date.getMonth()] + " " + addZero(today_date.getHours()) + ":" + addZero(today_date.getMinutes());
-      createDate.setAttribute("class", "today_date");
+  let createType = document.createElement("p");
+    createType.innerHTML = today_type;
+    createType.setAttribute("class", "today_type");
 
+  let location = document.createElement("p");
+    let postal_town = getParamGeo("postal_town")[0].long_name;
+    let lan = getParamGeo("administrative_area_level_1")[0].long_name;
+    location.innerHTML = postal_town + ", " + lan;
+    location.setAttribute("class", "today_location");
 
-    today_top.append(createTemp);
-    today_top.append(createType);
-    today_top.append(createTypeImg);
-    today_bottom.append(createDate);
+  let createDate = document.createElement("p");
+    createDate.innerHTML = days[today_date.getDay()] + ", " + today_date.getDay() +  " " + month[today_date.getMonth()] + " " + addZero(today_date.getHours()) + ":" + addZero(today_date.getMinutes());
+    createDate.setAttribute("class", "today_date");
 
-}
-
+  let createTypeImg = document.createElement("div");
+    createTypeImg.setAttribute("class", "today_img");
+    let setImage = getImagePosition(getParam("Wsymb2")[0].values[0]);
+    createTypeImg.style.backgroundPosition = setImage.lat + "px " + setImage.lng + "px";
 
 
+  today.append(createTypeImg);
+  today.append(createTemp);
+  today.append(createType);
+  today.append(location);
+  today.append(createDate);
 
 
-function addZero(i) {
-    if (i < 10) {
-        i = "0" + i;
-    }
-    return i;
+  // get SMHI info from parameters
+  function getParam(input){
+    return response.timeSeries[0].parameters.filter( filter => filter.name == input);
+  }
+  function getParamGeo(input) {
+    return map.getCurrentGeoCode().address_components.filter(loc => loc.types.includes(input));
+  }
+  function addZero(i) { if (i < 10) { i = "0" + i; } return i; }
+  function getImagePosition(input){
+    if(weather_klart.includes(input)){ return {lat: 2700, lng: 1580} }
+    else if(weather_molnigt.includes(input)){ return {lat: 2815, lng: 2040}; }
+    else if(weather_latt_molnigt.includes(input)){ return {lat: 2700, lng: 2035}; }
+    else if(weather_dimma.includes(input)){ return {lat: 2700, lng: 1700}; }
+    else if(weather_regn.includes(input)){ return {lat: 2816, lng: 1920}; }
+    else if(weather_blixt.includes(input)){ return {lat: 1900, lng: 1685}; }
+    else if(weather_hagel.includes(input)){ return {lat: 2125, lng: 1920}; }
+    else if(weather_sno.includes(input)){ return {lat: 2245, lng: 1810}; }
+  }
 }
