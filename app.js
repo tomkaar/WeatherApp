@@ -118,7 +118,7 @@ function map(id, zoom, controls){
       if( status == google.maps.GeocoderStatus.OK ) {
         callback(results[0]);
       } else {
-        today.innerHTML = "No results found.";
+        today.innerHTML = "No results found.<br>Cannot find geolocation";
       }
     });
   }
@@ -234,7 +234,7 @@ function buildWeather(response){
     location.innerHTML = postal_town + ", " + lan;
     location.setAttribute("class", "today_location");
   } else {
-    location.innerHTML = "Position Undefined";
+    location.innerHTML = "Position Undefined.";
     location.setAttribute("class", "today_location");
   }
 
@@ -253,6 +253,33 @@ function buildWeather(response){
   today.append(createType);
   today.append(location);
   today.append(createDate);
+
+
+
+
+
+  // Sort timeSeries into arrays after date
+  var timeLength = response.timeSeries.length;
+  var allDatesNames = [];
+  var sortedDates = [];
+
+  for(var i = 0; i < timeLength - 2; i++) {
+    let date = response.timeSeries[i].validTime;
+    let dateCut = date.substring(0, 10);
+    
+    if(dateCut in sortedDates){
+      sortedDates[dateCut].push(response.timeSeries[0]);
+    } else{
+      allDatesNames.push(dateCut);
+      sortedDates[dateCut] = new Array();
+      sortedDates[dateCut].push(response.timeSeries[0]);
+    }
+  }
+
+  console.log(allDatesNames);
+  console.log(sortedDates);
+
+
 
 
   // get SMHI info from parameters
