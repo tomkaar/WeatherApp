@@ -59,6 +59,87 @@ html, body {
     margin-top: 100px;
   }
 
+  .eachDate{
+    border-bottom: 1px solid rgba(255, 255, 255, 0.3);
+
+    .eachTop{
+      position: relative;
+      padding: 15px;
+      background: rgb(249, 249, 249);
+      border-bottom: 1px solid rgb(240, 240, 240);
+      overflow: auto;
+
+      .dateTopDate{
+        width: calc(100% - 100px);
+        float: left;
+      }
+
+      .dateTopButton{
+        position: absolute;
+        top: 12px;
+        right: 12px;
+        width: 30px;
+        height: 30px;
+        float: left;
+        font-size: 15px;
+
+        appearance: none;
+        background: transparent;
+        border: 1px solid transparent;
+        cursor: pointer;
+
+        &:before, &:after{
+          display: block;
+          content: "";
+          position: absolute;
+          top: 50%;
+          width: 15px;
+          height: 1px;
+          background: black;
+        }
+        &:before{
+          transform: rotate(45deg);
+          left: 2px;
+        }
+        &:after{
+          transform: rotate(-45deg);
+          left: 12px;
+        }
+      }
+    }
+    .eachContainer{
+      max-height: 0;
+      overflow: hidden;
+
+      &.open{
+        max-height: 2000px;
+      }
+
+      .dateItem{
+        padding: 5px 5px;
+        width: 100%;
+        overflow: auto;
+
+        .dateIcon{
+          float: left;
+          width: 40px;
+          height: 40px;
+          background: darkgrey;
+          border-radius: 50%;
+        }
+        h4{
+          float: left;
+          min-width: 100px;
+          padding: 10px 10px;
+        }
+      }
+
+      .dateItem:nth-child(even){
+        background: rgba(245, 245, 245, 0.5);
+      }
+    }
+  }
+
   .findMeBtn {
     z-index: 200;
     position: absolute;

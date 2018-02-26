@@ -1,11 +1,11 @@
 var days = {
-  "0": "Sunday",
-  "1": "Monday",
-  "2": "Tuesday",
-  "3": "Wednesday",
-  "4": "Thursday",
-  "5": "Friday",
-  "6": "Saturday"
+  "0": "Söndag",
+  "1": "Måndag",
+  "2": "Tisdag",
+  "3": "Onsdag",
+  "4": "Torsdag",
+  "5": "Fredag",
+  "6": "Lördag"
 };
 var month = {
   "0": "Januari",
@@ -209,6 +209,7 @@ function buildWeather(response){
 
   // clear innerhtml to write new content
   today.innerHTML = "";
+  future.innerHTML = "";
 
   // All them varibales
   let today_date = new Date();
@@ -240,12 +241,10 @@ function buildWeather(response){
 
 
 
-  // Sort timeSeries into array after date + create date array to use a reference
+  // Sort timeSeries into array after date + create date array to use as reference
   var timeLength = response.timeSeries.length;
   var allDatesNames = [];
   var sortedDates = [];
-
-  console.log(timeLength);
 
   for(var i = 0; i < timeLength; i++) {
     let date = response.timeSeries[i].validTime;
@@ -260,48 +259,67 @@ function buildWeather(response){
     }
   }
 
-  console.log(allDatesNames);
-  console.log(sortedDates);
+  // console.log(allDatesNames);
+  // console.log(sortedDates);
 
   // find each day
-  for (var i = 0; i < allDatesNames.length; i++) {
+  for (var i = 0; i < 5; i++) { // change how many days should be displayed (allDatesNames.length for all)
     // each day
     let day = sortedDates[allDatesNames[i]]
 
     // First of date (top row)
     let firstOfDay = day[0];
     let thisDate = new Date(firstOfDay.validTime);
-    console.log(firstOfDay);
+    // console.log(firstOfDay);
     console.log(thisDate);
 
     var createRow = document.createElement("div");
-      createRow.setAttribute("class", "EachDate");
+      createRow.setAttribute("class", "eachDate");
 
     var createTopContainer = document.createElement("div");
-      createTopContainer.setAttribute("class", "EachTopDate");
+      createTopContainer.setAttribute("class", "eachTop");
 
     var createRowTopDate = document.createElement("p");
-      createRowTopDate.setAttribute("class", "DateTopItem");
-      createRowTopDate.innerHTML = days[thisDate.getDay()] + " " + addZero(thisDate.getDate()) + " " + month[thisDate.getMonth()];
+      createRowTopDate.setAttribute("class", "dateTopDate");
+      createRowTopDate.innerHTML = days[thisDate.getDay()] + ", " + addZero(thisDate.getDate()) + " " + month[thisDate.getMonth()];
+
+    var createRowTopButton = document.createElement("button");
+      createRowTopButton.setAttribute("class", "dateTopButton");
+      createRowTopButton.addEventListener("click", function(e){
+        let next = e.target.parentNode.nextSibling;
+        next.classList.toggle("open");
+      });
 
     // Each Item container
     var createContainer = document.createElement("div");
-      createContainer.setAttribute("class", "EachContainer");
+      createContainer.setAttribute("class", "eachContainer open");
 
-      // Each Item
+      // Each Item under each day
       for (var k = 0; k < day.length; k++) {
         console.log(day[k]);
-        var eachDateItemTime = document.createElement("h4");
-          eachDateItemTime.setAttribute("class", "");
-          eachDateItemTime.innerHTML = "Kl. " + day[k].validTime.substring(11, 16);
-        var eachDateItem = document.createElement("div");
-          eachDateItem.setAttribute("class", "DateItem");
 
-          eachDateItem.appendChild(eachDateItemTime);
-          createContainer.appendChild(eachDateItem);
+        // create icon
+        var eachDateItemIcon = document.createElement("div");
+          eachDateItemIcon.setAttribute("class", "dateIcon");
+        // create min temp
+        // create max temp
+        // create vindstyrka
+
+        var eachDateItemTime = document.createElement("h4");
+          eachDateItemTime.setAttribute("class", "dateTime");
+          eachDateItemTime.innerHTML = "Kl. " + day[k].validTime.substring(11, 16);
+
+        var eachDateItem = document.createElement("div");
+          eachDateItem.setAttribute("class", "dateItem");
+
+        // Append
+        eachDateItem.appendChild(eachDateItemIcon);
+        eachDateItem.appendChild(eachDateItemTime);
+        createContainer.appendChild(eachDateItem);
       }
 
     // Append all items
+    createTopContainer.appendChild(createRowTopButton);
     createTopContainer.appendChild(createRowTopDate);
     createRow.appendChild(createTopContainer);
     createRow.appendChild(createContainer);
