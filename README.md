@@ -6,11 +6,11 @@ You can find this project [here](https://tomkaar.github.io/WeatherApp/)
 Create the map and you can for example use ```map.getCurrentLocation()``` to get the current location set on the map.
 - addListener - Google Maps Function, same as <code>addEventListener</code>
 - setLocation
-  - this.updateLocation
-  - this.setMarker
-  - this.moveToLocation
-  - getLocationData
-  - loadWeather
+- - this.updateLocation
+- - this.setMarker
+- - this.moveToLocation
+- - getLocationData
+- - loadWeather
 - getLocationData - Get coordinates from Google Maps GeoCoder
 - this.updateLocation - update coordinates
 - this.setMarker - Set a marker on the map + update marker
