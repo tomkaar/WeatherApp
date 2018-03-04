@@ -230,14 +230,29 @@ function buildWeather(response){
   today.innerHTML = "";
   future.innerHTML = "";
 
-  // All them varibales
+  // Sort timeSeries into array after date + create date array to use as reference
+  var timeLength = response.timeSeries.length;
+  var allDatesNames = [];
+  var sortedDates = [];
+
+  for(var i = 0; i < timeLength; i++) {
+    let date = response.timeSeries[i].validTime;
+    let dateCut = date.substring(0, 10);
+
+    if(dateCut in sortedDates){
+      sortedDates[dateCut].push(response.timeSeries[i]);
+    } else{
+      allDatesNames.push(dateCut);
+      sortedDates[dateCut] = new Array();
+      sortedDates[dateCut].push(response.timeSeries[i]);
+    }
+  }
+
+  // Create Today
   let today_date = new Date();
   let today_temp = getParameter("t")[0].values[0];
   let today_type = weatherCodes[ getParameter("Wsymb2")[0].values[0] ];
 
-
-
-  // Create Today
   let createTemp = new newElement("p", "today_temp", today_temp + "°");
   let createType = new newElement("p", "today_type", today_type);
   let createDate = new newElement("p", "today_date", days[today_date.getDay()] + ", " + today_date.getDate() +  " " + month[today_date.getMonth()] + " " + addZero(today_date.getHours()) + ":" + addZero(today_date.getMinutes()) );
@@ -258,27 +273,10 @@ function buildWeather(response){
 
 
 
-  // Sort timeSeries into array after date + create date array to use as reference
-  var timeLength = response.timeSeries.length;
-  var allDatesNames = [];
-  var sortedDates = [];
-
-  for(var i = 0; i < timeLength; i++) {
-    let date = response.timeSeries[i].validTime;
-    let dateCut = date.substring(0, 10);
-
-    if(dateCut in sortedDates){
-      sortedDates[dateCut].push(response.timeSeries[i]);
-    } else{
-      allDatesNames.push(dateCut);
-      sortedDates[dateCut] = new Array();
-      sortedDates[dateCut].push(response.timeSeries[i]);
-    }
-  }
 
 
 
-  // create containers for menu and deatil view
+  // create menu and detail views
   var menuContainer = new newElement("div", "menu", "");
   var detailsContainer = new newElement("div", "details", "");
 
