@@ -25,7 +25,10 @@
     </div>
 
     <div id="content">
-      <div id="errorMessage"></div>
+      <div id="errorMessage" class="errorMessage">
+        <p id="errorMessageText"></p>
+        <button id="errorMessageButton" onclick="hideErrorMessage(this)">Close</button>
+      </div>
 
       <div id="weatherBuild">
         <div id="today" class="today">

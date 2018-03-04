@@ -62,12 +62,15 @@ var weather = {
   "sno": [15, 16, 17, 25, 26, 27]
 }
 
-// locations
+// elements
 var build = document.getElementById("weatherBuild");
 var today = document.getElementById("today");
 var future = document.getElementById("future");
+
 var currentLocation = document.getElementById("currentLocation");
 var loadLocationMessage = document.getElementById("loadingScreen");
+var errorMessage = document.getElementById("errorMessage");
+var errorMessageText = document.getElementById("errorMessageText");
 
 // default position
 var defaultPositionlat = 59.334591;
@@ -177,27 +180,34 @@ function getMyLocation() {
 function showError(error) {
   switch(error.code) {
     case error.PERMISSION_DENIED:
-      errorMessage.innerHTML = "User denied the request for Geolocation. Position set to Stockholm.";
+      errorMessageText.innerHTML = "User denied the request for Geolocation. Position set to Stockholm.";
+      errorMessage.classList.add("visible");
       map.setLocation(defaultPositionlat, defaultPositionlng, true);
       loadLocationMessage.classList.remove("visible");
       break;
     case error.POSITION_UNAVAILABLE:
-      errorMessage.innerHTML = "Location information is unavailable. Position set to Stockholm.";
+      errorMessageText.innerHTML = "Location information is unavailable. Position set to Stockholm.";
+      errorMessage.classList.add("visible");
       map.setLocation(defaultPositionlat, defaultPositionlng, true);
       loadLocationMessage.classList.remove("visible");
       break;
     case error.TIMEOUT:
-      errorMessage.innerHTML = "The request to get user location timed out. Position set to Stockholm.";
+      errorMessageText.innerHTML = "The request to get user location timed out. Position set to Stockholm.";
+      errorMessage.classList.add("visible");
       map.setLocation(defaultPositionlat, defaultPositionlng, true);
       loadLocationMessage.classList.remove("visible");
       break;
     case error.UNKNOWN_ERROR:
-      errorMessage.innerHTML = "An unknown error occurred. Position set to Stockholm.";
+      errorMessageText.innerHTML = "An unknown error occurred. Position set to Stockholm.";
+      errorMessage.classList.add("visible");
       map.setLocation(defaultPositionlat, defaultPositionlng, true);
       loadLocationMessage.classList.remove("visible");
       break;
   }
 }
+
+// when you click on the close button on the error message
+function hideErrorMessage(e){ e.parentNode.classList.remove("visible"); }
 
 // Load weather from SMHI Web API
 async function loadWeather(lat, lng){
