@@ -163,7 +163,7 @@ function map(id, zoom, controls){
 
 
 // find users current location
-// getMyLocation();
+getMyLocation();
 function getMyLocation() {
   if (navigator.geolocation) {
     loadLocationMessage.classList.add("visible");
@@ -296,7 +296,7 @@ function buildWeather(response){
     };
 
     // create each date in menu
-    var date = new newElement("div", "dateTopDate", "");
+    var date = new newElement("button", "dateTopDate", "");
       date.setAttribute("data-id", i);
       date.addEventListener("click", function(e){
         document.querySelectorAll(".dayContainer").forEach( function(t){ t.classList.add("hidden"); });

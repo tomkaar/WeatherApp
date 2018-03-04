@@ -104,6 +104,8 @@ html, body {
     border-bottom: 1px solid rgba(0, 0, 0, 0.1);
 
     .dateTopDate{
+      -webkit-appearance: none;
+      appearance: none;
       position: relative;
       display: inline-block;
       text-align: center;
@@ -111,6 +113,9 @@ html, body {
       margin: 0 5px 0 5px;
       padding: 20px 0 10px 0;
       transition: 0.7s all ease;
+      background: white;
+      border: 1px solid white;
+      outline: none;
 
       .dateDate, .dateAvgTemp, .dateImg{
         display: block;
@@ -130,7 +135,7 @@ html, body {
         background-position: center;
       }
 
-      &:hover{
+      &:hover, &:focus{
         transition: 0.7s all ease;
         cursor: pointer;
 
@@ -175,7 +180,6 @@ html, body {
       width: 40px;
       height: 40px;
       float: left;
-      // border: 1px solid black;
     }
     .dayText{
       width: calc(100% - 120px);
@@ -192,7 +196,7 @@ html, body {
       }
     }
     .dayTemp{
-      width: 60px;
+      width: 80px;
       height: 40px;
       padding: 10px;
       float: left;
