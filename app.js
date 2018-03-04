@@ -51,27 +51,30 @@ var weatherCodes = {
   "27": "tung snöfall"
 };
 
-var weather_klart = [1];
-var weather_molnigt = [6];
-var weather_latt_molnigt = [2, 3, 4, 5];
-var weather_dimma = [7];
-var weather_regn = [8, 9, 10, 18, 19, 20];
-var weather_blixt = [11, 21];
-var weather_hagel = [12, 13, 14, 22, 23, 24];
-var weather_sno = [15, 16, 17, 25, 26, 27];
+var weather = {
+  "klart": [1],
+  "molnigt": [6],
+  "latt_molnigt": [2, 3, 4, 5],
+  "dimma": [7],
+  "regn": [8, 9, 10, 18, 19, 20],
+  "blixt": [11, 21],
+  "hagel": [12, 13, 14, 22, 23, 24],
+  "sno": [15, 16, 17, 25, 26, 27]
+}
 
+// locations
 var build = document.getElementById("weatherBuild");
 var today = document.getElementById("today");
 var future = document.getElementById("future");
-
 var currentLocation = document.getElementById("currentLocation");
 var loadLocationMessage = document.getElementById("loadingScreen");
 
+// default position
 var defaultPositionlat = 59.334591;
 var defaultPositionlng = 18.063240;
 
 
-
+// create + init map
 var map = new map("map", 10, true);
 function map(id, zoom, controls){
   this.currentLocation = { "lat": defaultPositionlat, "lng": defaultPositionlng};
@@ -89,6 +92,7 @@ function map(id, zoom, controls){
       style: google.maps.MapTypeControlStyle.HORIZONTAL_BAR,
       position: google.maps.ControlPosition.TOP_CENTER
     },
+    styles: mapStyle,
     fullscreenControl: false,
     streetViewControl: false,
   }
@@ -119,6 +123,7 @@ function map(id, zoom, controls){
         callback(results[0]);
       } else {
         today.innerHTML = "No results found.<br>Cannot find geolocation";
+        future.innerHTML = "";
       }
     });
   }
@@ -142,13 +147,13 @@ function map(id, zoom, controls){
     map.setCenter(new google.maps.LatLng(lat, lng));
   });
 
-  this.getCurrentGeoCode = function(){ return this.currentGeoCode[0]};
-  this.getCurrentLocation = function(){ return this.currentLocation};
-  this.getCurrentMarker = function(){ return this.currentMarker};
+  this.getCurrentGeoCode = function(){ return this.currentGeoCode[0] };
+  this.getCurrentLocation = function(){ return this.currentLocation };
+  this.getCurrentMarker = function(){ return this.currentMarker };
 }
 
 
-
+// find users current location
 // getMyLocation();
 function getMyLocation() {
   if (navigator.geolocation) {
@@ -190,8 +195,8 @@ function showError(error) {
 
 // Load weather from SMHI Web API
 async function loadWeather(lat, lng){
-  let lat2 = lat.toFixed(0);
-  let lng2 = lng.toFixed(0);
+  let lat2 = lat.toFixed(6);
+  let lng2 = lng.toFixed(6);
   let url = 'https://opendata-download-metfcst.smhi.se/api/category/pmp3g/version/2/geotype/point/lon/'+lng2+'/lat/'+lat2+'/data.json';
   let promise = await fetch(url).then( async function(data){
     let response = await data.json();
@@ -204,8 +209,6 @@ async function loadWeather(lat, lng){
 
 // Build Weather
 function buildWeather(response){
-  console.log(response);
-  // console.log(map.getCurrentGeoCode());
 
   // clear innerhtml to write new content
   today.innerHTML = "";
@@ -213,31 +216,32 @@ function buildWeather(response){
 
   // All them varibales
   let today_date = new Date();
-  let today_temp = getParam("t")[0].values[0];
-  let today_temp_type = getParam("t")[0].unit;
-  let today_type = weatherCodes[ getParam("Wsymb2")[0].values[0] ];
+  let today_temp = getParameter("t")[0].values[0];
+  let today_temp_type = getParameter("t")[0].unit;
+  let today_type = weatherCodes[ getParameter("Wsymb2")[0].values[0] ];
 
     if(today_temp_type == "Cel"){ today_temp_type = "°"; }
 
-  let createTemp = new newElement("p", "today_temp", today_temp + today_temp_type);
-  let createType = new newElement("p", "today_type", today_type);
-  let createDate = new newElement("p", "today_date", days[today_date.getDay()] + ", " + today_date.getDate() +  " " + month[today_date.getMonth()] + " " + addZero(today_date.getHours()) + ":" + addZero(today_date.getMinutes()) );
+
+
+  // Create Today
+  let createTemp = new dateElement("p", "today_temp", today_temp + today_temp_type);
+  let createType = new dateElement("p", "today_type", today_type);
+  let createDate = new dateElement("p", "today_date", days[today_date.getDay()] + ", " + today_date.getDate() +  " " + month[today_date.getMonth()] + " " + addZero(today_date.getHours()) + ":" + addZero(today_date.getMinutes()) );
 
   // create location if location is found in google maps
-  if(getParamGeo("administrative_area_level_1").length > 0 && getParamGeo("postal_town").length > 0){
-    let postal_town = getParamGeo("postal_town")[0].long_name;
-    let lan = getParamGeo("administrative_area_level_1")[0].long_name;
-    var createLocation = new newElement("p", "today_location", postal_town + ", " + lan);
+  if(getGeoParameter("administrative_area_level_1").length > 0 && getGeoParameter("postal_town").length > 0){
+    let postal_town = getGeoParameter("postal_town")[0].long_name;
+    let lan = getGeoParameter("administrative_area_level_1")[0].long_name;
+    var createLocation = new dateElement("p", "today_location", postal_town + ", " + lan);
   } else {
-    var createLocation = new newElement("p", "today_location", "Position Undefined.");
+    var createLocation = new dateElement("p", "today_location", "Position Undefined.");
   }
 
-  // create elements
-  createTemp.create(today);
-  createType.create(today);
-  createLocation.create(today);
-  createDate.create(today);
-
+  today.appendChild(createTemp);
+  today.appendChild(createType);
+  today.appendChild(createLocation);
+  today.appendChild(createDate);
 
 
 
@@ -259,114 +263,152 @@ function buildWeather(response){
     }
   }
 
-  // console.log(allDatesNames);
-  // console.log(sortedDates);
 
-  // find each day
-  for (var i = 0; i < 5; i++) { // change how many days should be displayed (allDatesNames.length for all)
-    // each day
-    let day = sortedDates[allDatesNames[i]]
 
-    // First of date (top row)
+  // create menu
+  var createRowTopContainer = new dateElement("div", "menu", "");
+  var futureDays = 5; // how many days in the future should be displayed
+
+  for (var i = 0; i < futureDays; i++) {
+    let day = sortedDates[allDatesNames[i]];
     let firstOfDay = day[0];
-    let thisDate = new Date(firstOfDay.validTime);
-    // console.log(firstOfDay);
-    console.log(thisDate);
+    let firstOfDayDate = new Date(firstOfDay.validTime);
 
-    var createRow = document.createElement("div");
-      createRow.setAttribute("class", "eachDate");
+    let thisDay = {
+      "coldest": getColdestTemp(day),
+      "warmest": getWarmestTemp(day),
+      "average": ((getColdestTemp(day) + getWarmestTemp(day)) / 2).toFixed(1),
+      "mostFrequent": mostFrequent(day)
+    };
 
-    var createTopContainer = document.createElement("div");
-      createTopContainer.setAttribute("class", "eachTop");
-
-    var createRowTopDate = document.createElement("p");
-      createRowTopDate.setAttribute("class", "dateTopDate");
-      createRowTopDate.innerHTML = days[thisDate.getDay()] + ", " + addZero(thisDate.getDate()) + " " + month[thisDate.getMonth()];
-
-    var createRowTopButton = document.createElement("button");
-      createRowTopButton.setAttribute("class", "dateTopButton");
-      createRowTopButton.addEventListener("click", function(e){
-        let next = e.target.parentNode.nextSibling;
-        next.classList.toggle("open");
+    // create each date in menu
+    var createRowTopDate = new dateElement("div", "dateTopDate", "");
+      createRowTopDate.setAttribute("data-id", i);
+      createRowTopDate.addEventListener("click", function(e){
+        document.querySelectorAll(".dateDateContainer").forEach( function(t){ t.classList.add("hidden"); });
+        document.querySelectorAll(".dateTopDate").forEach( function(t){ t.classList.remove("active"); });
+        this.classList.add("active");
+        let target = e.target.getAttribute("data-id");
+        document.getElementById("dateContainerDay" + target).classList.remove("hidden");
       });
 
-    // Each Item container
-    var createContainer = document.createElement("div");
-      createContainer.setAttribute("class", "eachContainer open");
+    var createRowTopDateDate = new dateElement("span", "dateTopDateNumber", days[firstOfDayDate.getDay()].substring(0, 3) );
+    var createRowTopDateImg = new dateElement("div", "dateTopDateImg", "");
+    createRowTopDateImg.style.backgroundPosition = getImagePosition(thisDay.mostFrequent).lat + "% " + getImagePosition(thisDay.mostFrequent).lng + "%";
+    var createRowTopDateAvgTemp = new dateElement("span", "dateTopDateMonth", thisDay.average );
 
-      // Each Item under each day
-      for (var k = 0; k < day.length; k++) {
-        console.log(day[k]);
-
-        // create icon
-        var eachDateItemIcon = document.createElement("div");
-          eachDateItemIcon.setAttribute("class", "dateIcon");
-        // create min temp
-        // create max temp
-        // create vindstyrka
-
-        var eachDateItemTime = document.createElement("h4");
-          eachDateItemTime.setAttribute("class", "dateTime");
-          eachDateItemTime.innerHTML = "Kl. " + day[k].validTime.substring(11, 16);
-
-        var eachDateItem = document.createElement("div");
-          eachDateItem.setAttribute("class", "dateItem");
-
-        // Append
-        eachDateItem.appendChild(eachDateItemIcon);
-        eachDateItem.appendChild(eachDateItemTime);
-        createContainer.appendChild(eachDateItem);
-      }
-
-    // Append all items
-    createTopContainer.appendChild(createRowTopButton);
-    createTopContainer.appendChild(createRowTopDate);
-    createRow.appendChild(createTopContainer);
-    createRow.appendChild(createContainer);
-    future.appendChild(createRow);
+    // append all to container
+    createRowTopDate.appendChild(createRowTopDateDate);
+    createRowTopDate.appendChild(createRowTopDateImg);
+    createRowTopDate.appendChild(createRowTopDateAvgTemp);
+    createRowTopContainer.appendChild(createRowTopDate);
+  }
+  future.appendChild(createRowTopContainer);
 
 
 
+  // create each detail pages
+  for (var i = 0; i < futureDays; i++) {
+    var day = sortedDates[allDatesNames[i]];
+    let firstOfDay = day[0];
+    let firstOfDayDate = new Date(firstOfDay.validTime);
+
+    let createDateContainer = new dateElement("div", "dateDateContainer hidden", "");
+      createDateContainer.setAttribute("id", "dateContainerDay" + i);
+
+    // Each Item on each day
+    for (var k = 0; k < day.length; k++) {
+      let d = new Date(day[k].validTime);
+      let todayWeathernumber = day[k].parameters.filter( filter => filter.name == "Wsymb2")[0].values[0];
+
+      let createDateContainerImg = new dateElement("div", "dateContainerImg", "");
+        createDateContainerImg.style.backgroundPosition =
+        getImagePosition(todayWeathernumber).lat + "% " +
+        getImagePosition(todayWeathernumber).lng + "%";
+      let createDateContainerText = new dateElement("div", "dateContainerText", "");
+      let createDateContainerTime = new dateElement("p", "dateContainerTextTime", addZero(d.getHours()) + ":" + addZero(d.getMinutes()));
+      let createDateContainerType = new dateElement("p", "dateContainerTextType", weatherCodes[ todayWeathernumber ]);
+
+      let createDateContainerDate = new dateElement("div", "dateDateContainerDate", "");
+
+      createDateContainerDate.append(createDateContainerImg);
+        createDateContainerText.append(createDateContainerTime);
+        createDateContainerText.append(createDateContainerType);
+      createDateContainerDate.append(createDateContainerText);
+      createDateContainer.append(createDateContainerDate);
+    }
+
+    future.append(createDateContainer);
   }
 
 
 
+  // Helpers
 
+  function getColdestTemp(loc){
+    let thisDay = loc.reduce( function(preValue, value){
+      return preValue.parameters[1].values[0] < value.parameters[1].values[0] ? preValue : value;
+    });
+    return thisDay.parameters[1].values[0];
+  };
+  function getWarmestTemp(loc){
+    let thisDay =  loc.reduce( function(preValue, value){
+      return preValue.parameters[1].values[0] > value.parameters[1].values[0] ? preValue : value;
+    });
+    return thisDay.parameters[1].values[0];
+  };
+  function mostFrequent(loc){
+    let array = [];
+    loc.forEach( function(e) {
+      array.push(e.parameters.filter( filter => filter.name == "Wsymb2")[0].values[0]);
+    });
 
+    var result = array[0];
+    var tmp = 0;
+    for(var i = 0; i < array.length; i++){
+      var count = 0;
+      for(var j = 0; j < array.length; j++){
+        if(array[i]===array[j]){
+          count++;
+        }
+      }
+      if(count > tmp){
+        tmp = count;
+        result = array[i];
+      }
+    }
+    return result;
+  } // end mostFrequent Function
 
-
-  // get SMHI weather info from parameters
-  function getParam(input){
+  // get parameters from
+  function getParameter(input){
     return response.timeSeries[0].parameters.filter( filter => filter.name == input);
   }
-  function getParamGeo(input) {
+  function getGeoParameter(input) {
     return map.getCurrentGeoCode().address_components.filter(loc => loc.types.includes(input));
   }
-  // add zeros to date while printing
+
+  // add a zero to the dates
   function addZero(i) { if (i < 10) { i = "0" + i; } return i; }
-  // get position for images from sprite
+
+  // get image position to show icons
   function getImagePosition(input){
-    if(weather_klart.includes(input)){ return {lat: 2700, lng: 1580} }
-    else if(weather_molnigt.includes(input)){ return {lat: 2815, lng: 2040}; }
-    else if(weather_latt_molnigt.includes(input)){ return {lat: 2700, lng: 2035}; }
-    else if(weather_dimma.includes(input)){ return {lat: 2700, lng: 1700}; }
-    else if(weather_regn.includes(input)){ return {lat: 2816, lng: 1920}; }
-    else if(weather_blixt.includes(input)){ return {lat: 1900, lng: 1685}; }
-    else if(weather_hagel.includes(input)){ return {lat: 2125, lng: 1920}; }
-    else if(weather_sno.includes(input)){ return {lat: 2245, lng: 1810}; }
+    if(weather.klart.includes(input)){ return {lat: 21.2, lng: 56} }
+    else if(weather.molnigt.includes(input)){ return {lat: 12.9, lng: 7.5}; }
+    else if(weather.latt_molnigt.includes(input)){ return {lat: 20.9, lng: 7.5}; }
+    else if(weather.dimma.includes(input)){ return {lat: 21.2, lng: 43.8}; }
+    else if(weather.regn.includes(input)){ return {lat: 12.9, lng: 20}; }
+    else if(weather.blixt.includes(input)){ return {lat: 78.7, lng: 44.8}; }
+    else if(weather.hagel.includes(input)){ return {lat: 62.3, lng: 20}; }
+    else if(weather.sno.includes(input)){ return {lat: 54, lng: 32.8}; }
   }
-  // create a new element function
-  function newElement(type, className, content){
-    this.type = type;
-    this.className = className;
-    this.content = content;
 
-    var element = document.createElement(type);
-    element.setAttribute("class", this.className);
-    element.innerHTML = this.content;
-
-    this.create = function(location){
-      location.appendChild(element);
-    }
+  // create new elements
+  function dateElement(type, className, content) {
+    var el = document.createElement(type);
+    el.setAttribute("class", className);
+    el.innerHTML = content;
+    return el;
   }
-}
+
+} // end weather build

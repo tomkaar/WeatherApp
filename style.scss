@@ -1,6 +1,7 @@
 *, *:before, *:after{
   margin: 0;
   padding: 0;
+  box-sizing: border-box;
 }
 html, body {
   height: 100%;
@@ -15,130 +16,164 @@ html, body {
 #map {
   float: left;
   height: 100%;
-  width: 50%;
+  width: calc(100% - 550px);
 }
 // content
 #content{
   position: relative;
   float: left;
-  width: 50%;
+  width: 550px;
   height: 100%;
   overflow: auto;
   min-height: 100vh;
 }
-  // content
-  .today{
-    position: relative;
-    margin: 90px 0 0 0;
-    padding: 30px 0 0 0;
+
+
+
+
+
+.today{
+  position: relative;
+  margin: 90px 0 0 0;
+  padding: 30px 0 0 0;
+  text-align: center;
+
+  .today_temp{
     text-align: center;
+    font-size: 60px;
+    line-height: 1;
 
-    .today_temp{
-      text-align: center;
-      font-size: 60px;
-      line-height: 1;
-
-      span{
-        font-size: 20px;
-      }
-    }
-    .today_type, .today_date{
-      padding: 5px 0;
-      text-align: center;
-      color: #565656;
-      text-transform: capitalize;
-    }
-    .today_location{
-      padding: 20px 0 0px 0;
-      text-align: center;
-      font-size: 27px;
+    span{
+      font-size: 20px;
     }
   }
-
-  .future{
-    margin-top: 100px;
+  .today_type, .today_date{
+    padding: 5px 0;
+    text-align: center;
+    color: #565656;
+    text-transform: capitalize;
   }
+  .today_location{
+    padding: 20px 0 0px 0;
+    text-align: center;
+    font-size: 27px;
+  }
+}
 
-  .eachDate{
-    border-bottom: 1px solid rgba(255, 255, 255, 0.3);
 
-    .eachTop{
+
+
+
+.future{
+  margin-top: 100px;
+
+  .menu{
+    width: 100%;
+    margin: 0 0 25px 0;
+    text-align: center;
+    // border-top: 1px solid rgba(0, 0, 0, 0.1);
+    border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+
+    .dateTopDate{
       position: relative;
-      padding: 15px;
-      background: rgb(249, 249, 249);
-      border-bottom: 1px solid rgb(240, 240, 240);
-      overflow: auto;
+      display: inline-block;
+      text-align: center;
+      width: 100px;
+      margin: 0 5px 0 5px;
+      padding: 20px 0 10px 0;
+      transition: 0.7s all ease;
 
-      .dateTopDate{
-        width: calc(100% - 100px);
-        float: left;
+      .dateTopDateDay, .dateTopDateNumber, .dateTopDateMonth, .dateTopDateImg{
+        display: block;
+        width: 100%;
+        pointer-events: none;
+      }
+      .dateTopDateNumber{ font-size: 15px; color: #565656; line-height: 15px; }
+      .dateTopDateMonth{ font-size: 15px; color: #565656; line-height: 15px; padding: 0 0 5px 0; }
+      .dateTopDateImg{
+        width: 60px;
+        height: 60px;
+        margin-left: 20px;
+        background: orangered;
+        background: url(icons.png);
+        background-size: 750px;
+        border-radius: 50%;
       }
 
-      .dateTopButton{
-        position: absolute;
-        top: 12px;
-        right: 12px;
-        width: 30px;
-        height: 30px;
-        float: left;
-        font-size: 15px;
-
-        appearance: none;
-        background: transparent;
-        border: 1px solid transparent;
+      &:hover{
+        transition: 0.7s all ease;
         cursor: pointer;
 
-        &:before, &:after{
-          display: block;
-          content: "";
-          position: absolute;
-          top: 50%;
-          width: 15px;
-          height: 1px;
-          background: black;
-        }
-        &:before{
-          transform: rotate(45deg);
-          left: 2px;
-        }
         &:after{
-          transform: rotate(-45deg);
-          left: 12px;
+          content: "";
+          display: block;
+          position: absolute;
+          bottom: -2px;
+          left: 0;
+          width: 100%;
+          height: 3px;
+          background: lighten(lightblue, 10%);
         }
       }
-    }
-    .eachContainer{
-      max-height: 0;
-      overflow: hidden;
 
-      &.open{
-        max-height: 2000px;
-      }
-
-      .dateItem{
-        padding: 5px 5px;
+      &.active{ &:after{
+        content: "";
+        display: block;
+        position: absolute;
+        bottom: -2px;
+        left: 0;
         width: 100%;
-        overflow: auto;
+        height: 3px;
+        background: lightblue;
+      }}
+    }
+  } // menu end
+  .dateDateContainer{
+    width: 100%;
+    padding: 25px;
+    overflow: auto;
 
-        .dateIcon{
-          float: left;
-          width: 40px;
-          height: 40px;
-          background: darkgrey;
-          border-radius: 50%;
-        }
-        h4{
-          float: left;
-          min-width: 100px;
-          padding: 10px 10px;
-        }
+    .dateDateContainerDate{
+      padding: 10px 0 10px 15px;
+      overflow: auto;
+      border-bottom: 1px solid #eee;
+    }
+    .dateTitle{
+      padding: 0 0 15px 0;
+    }
+    .dateContainerImg{
+      width: 40px;
+      height: 40px;
+      float: left;
+      background: grey;
+      border-radius: 50%;
+      background: url(icons.png);
+      background-size: 500px;
+      background-position: 21.2% 56%;
+      // border: 1px solid black;
+    }
+    .dateContainerText{
+      width: calc(100% - 120px);
+      padding: 0 10px 0 10px;
+      float: left;
+
+      .dateContainerTextTime{
+        font-size: 17px;
       }
-
-      .dateItem:nth-child(even){
-        background: rgba(245, 245, 245, 0.5);
+      .dateContainerTextType{
+        font-size: 13px;
+        color: #565656;
+        text-transform: capitalize;
       }
     }
+  &.hidden{ display: none; }
   }
+}
+
+
+
+
+
 
   .findMeBtn {
     z-index: 200;
@@ -163,21 +198,21 @@ html, body {
 
 
 
-// Load
+// Loading screen
 .loadingScreen{
   position: fixed;
   display: none;
   z-index: 10000;
   top: 0;
-  left: 0;
+  left: calc(100% - 550px);
   width: 100%;
   height: 100%;
 }
   .lsContent{
     position: absolute;
-    width: 50%;
+    width: 550px;
     height: 100%;
-    left: 50%;
+    left: 0;
     background: white;
   }
   .loadingScreen p{
