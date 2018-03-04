@@ -223,15 +223,12 @@ function buildWeather(response){
   // All them varibales
   let today_date = new Date();
   let today_temp = getParameter("t")[0].values[0];
-  let today_temp_type = getParameter("t")[0].unit;
   let today_type = weatherCodes[ getParameter("Wsymb2")[0].values[0] ];
-
-    if(today_temp_type == "Cel"){ today_temp_type = "°"; }
 
 
 
   // Create Today
-  let createTemp = new newElement("p", "today_temp", today_temp + today_temp_type);
+  let createTemp = new newElement("p", "today_temp", today_temp + "°");
   let createType = new newElement("p", "today_type", today_type);
   let createDate = new newElement("p", "today_date", days[today_date.getDay()] + ", " + today_date.getDate() +  " " + month[today_date.getMonth()] + " " + addZero(today_date.getHours()) + ":" + addZero(today_date.getMinutes()) );
 
@@ -323,6 +320,7 @@ function buildWeather(response){
 
       let thisTime = new Date(day[k].validTime);
       let todayWeatherNumber = day[k].parameters.filter( filter => filter.name == "Wsymb2")[0].values[0];
+      let thisTemp = day[k].parameters.filter( filter => filter.name == "t")[0].values[0];
 
       let dayImg = new newElement("div", "dayImg", "");
         dayImg.style.backgroundPosition =
@@ -331,11 +329,13 @@ function buildWeather(response){
       let dayText = new newElement("div", "dayText", "");
       let dayTime = new newElement("p", "dayTime", addZero(thisTime.getHours()) + ":" + addZero(thisTime.getMinutes()));
       let dayType = new newElement("p", "dayType", weatherCodes[todayWeatherNumber]);
+      let dayTemp = new newElement("p", "dayTemp", thisTemp + "°");
 
-      eachTime.append(dayImg);
         dayText.append(dayTime);
         dayText.append(dayType);
       eachTime.append(dayText);
+      eachTime.append(dayImg);
+      eachTime.append(dayTemp);
       dayContainer.append(eachTime);
     }
 
