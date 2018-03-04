@@ -298,7 +298,7 @@ function buildWeather(response){
 
     let dateDate = new newElement("span", "dateDate", days[firstDayDate.getDay()].substring(0, 3) );
     let dateImg = new newElement("div", "dateImg", "");
-    dateImg.style.backgroundPosition = getImagePosition(thisDay.mostFrequent).lat + "% " + getImagePosition(thisDay.mostFrequent).lng + "%";
+    dateImg.classList.add(getImg(thisDay.mostFrequent));
     let dateAvgTemp = new newElement("span", "dateAvgTemp", thisDay.average );
 
     // append elements to menu container
@@ -323,9 +323,9 @@ function buildWeather(response){
       let thisTemp = day[k].parameters.filter( filter => filter.name == "t")[0].values[0];
 
       let dayImg = new newElement("div", "dayImg", "");
-        dayImg.style.backgroundPosition =
-        getImagePosition(todayWeatherNumber).lat + "% " +
-        getImagePosition(todayWeatherNumber).lng + "%";
+        dayImg.classList.add(getImg(todayWeatherNumber));
+        dayImg.alt = weatherCodes[todayWeatherNumber];
+        dayImg.title = weatherCodes[todayWeatherNumber];
       let dayText = new newElement("div", "dayText", "");
       let dayTime = new newElement("p", "dayTime", addZero(thisTime.getHours()) + ":" + addZero(thisTime.getMinutes()));
       let dayType = new newElement("p", "dayType", weatherCodes[todayWeatherNumber]);
@@ -396,16 +396,17 @@ function buildWeather(response){
   // add a zero to the dates
   function addZero(i) { if (i < 10) { i = "0" + i; } return i; }
 
-  // get image position to show icons
-  function getImagePosition(input){
-    if(weather.klart.includes(input)){ return {lat: 21.2, lng: 56} }
-    else if(weather.molnigt.includes(input)){ return {lat: 12.9, lng: 7.5}; }
-    else if(weather.latt_molnigt.includes(input)){ return {lat: 20.9, lng: 7.5}; }
-    else if(weather.dimma.includes(input)){ return {lat: 21.2, lng: 43.8}; }
-    else if(weather.regn.includes(input)){ return {lat: 12.9, lng: 20}; }
-    else if(weather.blixt.includes(input)){ return {lat: 78.7, lng: 44.8}; }
-    else if(weather.hagel.includes(input)){ return {lat: 62.3, lng: 20}; }
-    else if(weather.sno.includes(input)){ return {lat: 54, lng: 32.8}; }
+  // get the right weather image
+  function getImg(i) {
+    if(weather.klart.includes(i)){ return 'sun'; }
+    else if(weather.molnigt.includes(i)){ return 'Cloud'; }
+    else if(weather.latt_molnigt.includes(i)){ return 'CloudLight'; }
+    else if(weather.dimma.includes(i)){ return 'Fog'; }
+    else if(weather.regn.includes(i)){ return 'Rain'; }
+    else if(weather.blixt.includes(i)){ return 'Lightning'; }
+    else if(weather.hagel.includes(i)){ return 'Hail'; }
+    else if(weather.sno.includes(i)){ return 'Snow'; }
+    else { return 'Sun'; }
   }
 
   // create new elements

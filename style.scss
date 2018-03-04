@@ -91,12 +91,14 @@ html, body {
       .dateDate{ font-size: 15px; color: #565656; line-height: 15px; }
       .dateAvgTemp{ font-size: 15px; color: #565656; line-height: 15px; padding: 0 0 5px 0; }
       .dateImg{
-        width: 60px;
-        height: 60px;
-        margin-left: 20px;
-        background: url(icons.png);
-        background-size: 750px;
-        border-radius: 50%;
+        width: 40px;
+        height: 40px;
+        margin-left: 30px;
+        margin-top: 10px;
+        margin-bottom: 10px;
+        background-size: 100%;
+        background-repeat: no-repeat;
+        background-position: center;
       }
 
       &:hover{
@@ -141,11 +143,6 @@ html, body {
       width: 40px;
       height: 40px;
       float: left;
-      background: grey;
-      border-radius: 50%;
-      background: url(icons.png);
-      background-size: 500px;
-      background-position: 21.2% 56%;
       // border: 1px solid black;
     }
     .dayText{
@@ -175,6 +172,14 @@ html, body {
 }
 
 
+.Sun{ background: url(img/sun.svg); }
+.Cloud{ background: url(img/cloud.svg); }
+.CloudLight{ background: url(img/cloud-light.svg); }
+.Rain{ background: url(img/rain.svg); }
+.Fog{ background: url(img/fog.svg); }
+.Lightning{ background: url(img/lightning.svg); }
+.Snow{ background: url(img/snow.svg); }
+.Hail{ background: url(img/hail.svg); }
 
 
 
@@ -208,7 +213,8 @@ html, body {
   display: none;
   z-index: 10000;
   top: 0;
-  left: calc(100% - 550px);
+  left: 0;
+  // left: calc(100% - 550px);
   width: 100%;
   height: 100%;
 }
@@ -216,14 +222,14 @@ html, body {
     position: absolute;
     width: 550px;
     height: 100%;
-    left: 0;
+    left: calc(100% - 550px);
     background: white;
   }
   .loadingScreen p{
     width: 100%;
-    color: black;
+    color: #565656;
     text-align: center;
-    font-size: 45px;
+    font-size: 25px;
   }
   .loadingScreen.visible{
     display: block;
@@ -240,7 +246,7 @@ html, body {
 // Spinner
 .spinner {
   width: 100px;
-  height: 100px;
+  height: 75px;
   background: #eee;
   border-radius: 50%;
   position: relative;
@@ -265,7 +271,7 @@ html, body {
       width: 20px;
       height: 20px;
       bottom: 30px;
-      background: #565656;
+      background: #97e1f2;
 
       &:nth-child(1){
         animation: s20 2s ease-in-out infinite;
