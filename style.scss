@@ -15,17 +15,16 @@ html, body {
 // map
 #map {
   float: left;
-  height: 100%;
-  width: calc(100% - 550px);
+  height: 50%;
+  width: 100%;
 }
 // content
 #content{
   position: relative;
   float: left;
-  width: 550px;
-  height: 100%;
+  width: 100%;
   overflow: auto;
-  min-height: 100vh;
+  min-height: 100%;
 }
 
 .errorMessage{
@@ -340,3 +339,18 @@ html, body {
       opacity: 0.4;
     }
   }
+
+
+
+
+@media screen and (min-width: 768px) {
+  #map{
+    height: 100%;
+    width: calc(100% - 550px);
+  }
+  #content{
+    width: 550px;
+    overflow: auto;
+    height: 100%;
+  }
+}
