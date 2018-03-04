@@ -39,6 +39,7 @@ Using the response from the loadWeather function, display weather information on
 ### Helpers
 - getColdestTemp - use reduce and return coldest temperature
 - getWarmestTemp - use reduce and return warmest temperature
+- getAverageTemp - use forEach and reduce to get the average temperature
 - mostFrequent - user filter and return the weather type that's most common on that day
 - getParameter - getFirstDay Parameters
 - getGeoParameter - get current location information

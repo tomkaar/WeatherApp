@@ -163,7 +163,7 @@ function map(id, zoom, controls){
 
 
 // find users current location
-getMyLocation();
+// getMyLocation();
 function getMyLocation() {
   if (navigator.geolocation) {
     loadLocationMessage.classList.add("visible");
@@ -289,7 +289,7 @@ function buildWeather(response){
     let thisDay = {
       "coldest": getColdestTemp(day),
       "warmest": getWarmestTemp(day),
-      "average": ((getColdestTemp(day) + getWarmestTemp(day)) / 2).toFixed(1),
+      "average": getAverageTemp(day),
       "mostFrequent": mostFrequent(day)
     };
 
@@ -370,6 +370,12 @@ function buildWeather(response){
     });
     return thisDay.parameters[1].values[0];
   };
+  function getAverageTemp(loc) {
+    let all = [];
+    loc.forEach( function(e){ all.push(e.parameters[1].values[0]); });
+    let thisDay = all.reduce((total, value) => total += value);
+    return (thisDay/all.length).toFixed(1);
+  }
   function mostFrequent(loc){
     let array = [];
     loc.forEach( function(e) {
