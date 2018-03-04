@@ -241,7 +241,7 @@ function buildWeather(response){
     let lan = getGeoParameter("administrative_area_level_1")[0].long_name;
     var createLocation = new newElement("p", "today_location", postal_town + ", " + lan);
   } else {
-    var createLocation = new newElement("p", "today_location", "Position Undefined.");
+    var createLocation = new newElement("p", "today_location", "Position Undefined");
   }
 
   today.appendChild(createTemp);
@@ -271,15 +271,14 @@ function buildWeather(response){
 
 
 
-
-  var createMenuContainer = new newElement("div", "menu", "");
-  var createDetailViewCContainer = new newElement("div", "details", "");
+  // create containers for menu and deatil view
+  var menuContainer = new newElement("div", "menu", "");
+  var detailsContainer = new newElement("div", "details", "");
 
 
   for (var i = 0; i < futureDays; i++) {
     let day = sortedDates[allDatesNames[i]];
-    let firstOfDay = day[0];
-    let firstOfDayDate = new Date(firstOfDay.validTime);
+    let firstDayDate = new Date(day[0].validTime);
 
     // create menu
     let thisDay = {
@@ -290,66 +289,67 @@ function buildWeather(response){
     };
 
     // create each date in menu
-    var createRowTopDate = new newElement("div", "dateTopDate", "");
-      createRowTopDate.setAttribute("data-id", i);
-      createRowTopDate.addEventListener("click", function(e){
-        document.querySelectorAll(".dateDateContainer").forEach( function(t){ t.classList.add("hidden"); });
+    var date = new newElement("div", "dateTopDate", "");
+      date.setAttribute("data-id", i);
+      date.addEventListener("click", function(e){
+        document.querySelectorAll(".dayContainer").forEach( function(t){ t.classList.add("hidden"); });
         document.querySelectorAll(".dateTopDate").forEach( function(t){ t.classList.remove("active"); });
         this.classList.add("active");
         let target = e.target.getAttribute("data-id");
-        document.getElementById("dateContainerDay" + target).classList.remove("hidden");
+        document.getElementById("day" + target).classList.remove("hidden");
       });
 
-    var createRowTopDateDate = new newElement("span", "dateTopDateNumber", days[firstOfDayDate.getDay()].substring(0, 3) );
-    var createRowTopDateImg = new newElement("div", "dateTopDateImg", "");
-    createRowTopDateImg.style.backgroundPosition = getImagePosition(thisDay.mostFrequent).lat + "% " + getImagePosition(thisDay.mostFrequent).lng + "%";
-    var createRowTopDateAvgTemp = new newElement("span", "dateTopDateMonth", thisDay.average );
+    let dateDate = new newElement("span", "dateDate", days[firstDayDate.getDay()].substring(0, 3) );
+    let dateImg = new newElement("div", "dateImg", "");
+    dateImg.style.backgroundPosition = getImagePosition(thisDay.mostFrequent).lat + "% " + getImagePosition(thisDay.mostFrequent).lng + "%";
+    let dateAvgTemp = new newElement("span", "dateAvgTemp", thisDay.average );
 
     // append elements to menu container
-    createRowTopDate.appendChild(createRowTopDateDate);
-    createRowTopDate.appendChild(createRowTopDateImg);
-    createRowTopDate.appendChild(createRowTopDateAvgTemp);
-    createMenuContainer.appendChild(createRowTopDate);
+    date.appendChild(dateDate);
+    date.appendChild(dateImg);
+    date.appendChild(dateAvgTemp);
+    menuContainer.appendChild(date);
 
 
 
 
     // create detail page
-    let createDateContainer = new newElement("div", "dateDateContainer hidden", "");
-      createDateContainer.setAttribute("id", "dateContainerDay" + i);
+    let dayContainer = new newElement("div", "dayContainer hidden", "");
+      dayContainer.setAttribute("id", "day" + i);
 
     // Each timeSeries in each day
     for (var k = 0; k < day.length; k++) {
-      let d = new Date(day[k].validTime);
-      let todayWeathernumber = day[k].parameters.filter( filter => filter.name == "Wsymb2")[0].values[0];
+      let eachTime = new newElement("div", "dayTS", "");
 
-      let createDateContainerImg = new newElement("div", "dateContainerImg", "");
-        createDateContainerImg.style.backgroundPosition =
-        getImagePosition(todayWeathernumber).lat + "% " +
-        getImagePosition(todayWeathernumber).lng + "%";
-      let createDateContainerText = new newElement("div", "dateContainerText", "");
-      let createDateContainerTime = new newElement("p", "dateContainerTextTime", addZero(d.getHours()) + ":" + addZero(d.getMinutes()));
-      let createDateContainerType = new newElement("p", "dateContainerTextType", weatherCodes[ todayWeathernumber ]);
+      let thisTime = new Date(day[k].validTime);
+      let todayWeatherNumber = day[k].parameters.filter( filter => filter.name == "Wsymb2")[0].values[0];
 
-      let createDateContainerDate = new newElement("div", "dateDateContainerDate", "");
+      let dayImg = new newElement("div", "dayImg", "");
+        dayImg.style.backgroundPosition =
+        getImagePosition(todayWeatherNumber).lat + "% " +
+        getImagePosition(todayWeatherNumber).lng + "%";
+      let dayText = new newElement("div", "dayText", "");
+      let dayTime = new newElement("p", "dayTime", addZero(thisTime.getHours()) + ":" + addZero(thisTime.getMinutes()));
+      let dayType = new newElement("p", "dayType", weatherCodes[todayWeatherNumber]);
 
-      createDateContainerDate.append(createDateContainerImg);
-        createDateContainerText.append(createDateContainerTime);
-        createDateContainerText.append(createDateContainerType);
-      createDateContainerDate.append(createDateContainerText);
-      createDateContainer.append(createDateContainerDate);
+      eachTime.append(dayImg);
+        dayText.append(dayTime);
+        dayText.append(dayType);
+      eachTime.append(dayText);
+      dayContainer.append(eachTime);
     }
 
-    createDetailViewCContainer.append(createDateContainer);
+    detailsContainer.append(dayContainer);
   }
 
-  future.appendChild(createMenuContainer);
-  future.append(createDetailViewCContainer);
+  future.appendChild(menuContainer);
+  future.append(detailsContainer);
+
+
 
 
 
   // Helpers
-
   function getColdestTemp(loc){
     let thisDay = loc.reduce( function(preValue, value){
       return preValue.parameters[1].values[0] < value.parameters[1].values[0] ? preValue : value;
@@ -410,10 +410,10 @@ function buildWeather(response){
 
   // create new elements
   function newElement(type, className, content) {
-    var el = document.createElement(type);
-    el.setAttribute("class", className);
-    el.innerHTML = content;
-    return el;
+    var element = document.createElement(type);
+    element.setAttribute("class", className);
+    element.innerHTML = content;
+    return element;
   }
 
 } // end weather build

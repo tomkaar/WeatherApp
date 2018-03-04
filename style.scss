@@ -83,18 +83,17 @@ html, body {
       padding: 20px 0 10px 0;
       transition: 0.7s all ease;
 
-      .dateTopDateDay, .dateTopDateNumber, .dateTopDateMonth, .dateTopDateImg{
+      .dateDate, .dateAvgTemp, .dateImg{
         display: block;
         width: 100%;
         pointer-events: none;
       }
-      .dateTopDateNumber{ font-size: 15px; color: #565656; line-height: 15px; }
-      .dateTopDateMonth{ font-size: 15px; color: #565656; line-height: 15px; padding: 0 0 5px 0; }
-      .dateTopDateImg{
+      .dateDate{ font-size: 15px; color: #565656; line-height: 15px; }
+      .dateAvgTemp{ font-size: 15px; color: #565656; line-height: 15px; padding: 0 0 5px 0; }
+      .dateImg{
         width: 60px;
         height: 60px;
         margin-left: 20px;
-        background: orangered;
         background: url(icons.png);
         background-size: 750px;
         border-radius: 50%;
@@ -128,20 +127,17 @@ html, body {
       }}
     }
   } // menu end
-  .dateDateContainer{
+  .dayContainer{
     width: 100%;
     padding: 25px;
     overflow: auto;
 
-    .dateDateContainerDate{
+    .dayTS{
       padding: 10px 0 10px 15px;
       overflow: auto;
       border-bottom: 1px solid #eee;
     }
-    .dateTitle{
-      padding: 0 0 15px 0;
-    }
-    .dateContainerImg{
+    .dayImg{
       width: 40px;
       height: 40px;
       float: left;
@@ -152,15 +148,15 @@ html, body {
       background-position: 21.2% 56%;
       // border: 1px solid black;
     }
-    .dateContainerText{
+    .dayText{
       width: calc(100% - 120px);
       padding: 0 10px 0 10px;
       float: left;
 
-      .dateContainerTextTime{
+      .dayTime{
         font-size: 17px;
       }
-      .dateContainerTextType{
+      .dayType{
         font-size: 13px;
         color: #565656;
         text-transform: capitalize;
