@@ -2,6 +2,7 @@
   margin: 0;
   padding: 0;
   box-sizing: border-box;
+  -webkit-tap-highlight-color: transparent;
 }
 html, body {
   height: 100%;
@@ -103,7 +104,6 @@ html, body {
     border-bottom: 1px solid rgba(0, 0, 0, 0.1);
 
     .dateTopDate{
-      -webkit-tap-highlight-color: transparent;
       -webkit-appearance: none;
       appearance: none;
       position: relative;
@@ -165,7 +165,7 @@ html, body {
   } // menu end
   .dayContainer{
     width: 100%;
-    padding: 0 25px 25px 25px;
+    padding: 0 0px 50px 0px;
     overflow: auto;
 
     .dayTS{
@@ -347,11 +347,14 @@ html, body {
 @media screen and (min-width: 768px) {
   #map{
     height: 100%;
-    width: calc(100% - 550px);
+    width: calc(100% - 600px);
   }
   #content{
-    width: 550px;
+    width: 600px;
     overflow: auto;
     height: 100%;
+  }
+  .future .dayContainer{
+    padding: 0 25px 50px 25px;
   }
 }

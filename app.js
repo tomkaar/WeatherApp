@@ -253,17 +253,17 @@ function buildWeather(response){
   let today_temp = getParameter("t")[0].values[0];
   let today_type = weatherCodes[ getParameter("Wsymb2")[0].values[0] ];
 
-  let createTemp = new newElement("p", "today_temp", today_temp + "°");
-  let createType = new newElement("p", "today_type", today_type);
-  let createDate = new newElement("p", "today_date", days[today_date.getDay()] + ", " + today_date.getDate() +  " " + month[today_date.getMonth()] + " " + addZero(today_date.getHours()) + ":" + addZero(today_date.getMinutes()) );
+  let createTemp = newElement("p", "today_temp", today_temp + "°");
+  let createType = newElement("p", "today_type", today_type);
+  let createDate = newElement("p", "today_date", days[today_date.getDay()] + ", " + today_date.getDate() +  " " + month[today_date.getMonth()] + " " + addZero(today_date.getHours()) + ":" + addZero(today_date.getMinutes()) );
 
   // create location if location is found in google maps
   if(getGeoParameter("administrative_area_level_1").length > 0 && getGeoParameter("postal_town").length > 0){
     let postal_town = getGeoParameter("postal_town")[0].long_name;
     let lan = getGeoParameter("administrative_area_level_1")[0].long_name;
-    var createLocation = new newElement("p", "today_location", postal_town + ", " + lan);
+    var createLocation = newElement("p", "today_location", postal_town + ", " + lan);
   } else {
-    var createLocation = new newElement("p", "today_location", "Position Undefined");
+    var createLocation = newElement("p", "today_location", "Position Undefined");
   }
 
   today.appendChild(createTemp);
@@ -277,8 +277,8 @@ function buildWeather(response){
 
 
   // create menu and detail views
-  var menuContainer = new newElement("div", "menu", "");
-  var detailsContainer = new newElement("div", "details", "");
+  var menuContainer = newElement("div", "menu", "");
+  var detailsContainer = newElement("div", "details", "");
 
 
   for (var i = 0; i < futureDays; i++) {
@@ -294,7 +294,7 @@ function buildWeather(response){
     };
 
     // create each date in menu
-    var date = new newElement("button", "dateTopDate", "");
+    var date = newElement("button", "dateTopDate", "");
       date.setAttribute("data-id", i);
       date.addEventListener("click", function(e){
         document.querySelectorAll(".dayContainer").forEach( function(t){ t.classList.add("hidden"); });
@@ -304,10 +304,10 @@ function buildWeather(response){
         document.getElementById("day" + target).classList.remove("hidden");
       });
 
-    let dateDate = new newElement("span", "dateDate", days[firstDayDate.getDay()].substring(0, 3) );
-    let dateImg = new newElement("div", "dateImg", "");
+    let dateDate = newElement("span", "dateDate", days[firstDayDate.getDay()].substring(0, 3) );
+    let dateImg = newElement("div", "dateImg", "");
     dateImg.classList.add(getImg(thisDay.mostFrequent));
-    let dateAvgTemp = new newElement("span", "dateAvgTemp", thisDay.average );
+    let dateAvgTemp = newElement("span", "dateAvgTemp", thisDay.average );
 
     // append elements to menu container
     date.appendChild(dateDate);
@@ -319,25 +319,25 @@ function buildWeather(response){
 
 
     // create detail page
-    let dayContainer = new newElement("div", "dayContainer hidden", "");
+    let dayContainer = newElement("div", "dayContainer hidden", "");
       dayContainer.setAttribute("id", "day" + i);
 
     // Each timeSeries in each day
     for (var k = 0; k < day.length; k++) {
-      let eachTime = new newElement("div", "dayTS", "");
+      let eachTime = newElement("div", "dayTS", "");
 
       let thisTime = new Date(day[k].validTime);
       let todayWeatherNumber = day[k].parameters.filter( filter => filter.name == "Wsymb2")[0].values[0];
       let thisTemp = day[k].parameters.filter( filter => filter.name == "t")[0].values[0];
 
-      let dayImg = new newElement("div", "dayImg", "");
+      let dayImg = newElement("div", "dayImg", "");
         dayImg.classList.add(getImg(todayWeatherNumber));
         dayImg.alt = weatherCodes[todayWeatherNumber];
         dayImg.title = weatherCodes[todayWeatherNumber];
-      let dayText = new newElement("div", "dayText", "");
-      let dayTime = new newElement("p", "dayTime", addZero(thisTime.getHours()) + ":" + addZero(thisTime.getMinutes()));
-      let dayType = new newElement("p", "dayType", weatherCodes[todayWeatherNumber]);
-      let dayTemp = new newElement("p", "dayTemp", thisTemp + "°");
+      let dayText = newElement("div", "dayText", "");
+      let dayTime = newElement("p", "dayTime", addZero(thisTime.getHours()) + ":" + addZero(thisTime.getMinutes()));
+      let dayType = newElement("p", "dayType", weatherCodes[todayWeatherNumber]);
+      let dayTemp = newElement("p", "dayTemp", thisTemp + "°");
 
         dayText.append(dayTime);
         dayText.append(dayType);
