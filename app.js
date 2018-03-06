@@ -90,8 +90,6 @@ function map(id, zoom, controls){
   this.currentMarker = [];
   this.currentGeoCode = [];
 
-  var geo = this.currentGeoCode;
-
   var mapContainer = document.getElementById(id);
   var mapProperties = {
     center: {lat: defaultPositionlat, lng: defaultPositionlng},
@@ -120,10 +118,13 @@ function map(id, zoom, controls){
     this.setMarker(lat, lng);
     if(moveTo){ this.moveToLocation(lat, lng); }
     getLocationData(lat, lng, function(locationData) {
-      geo[0] = locationData;
+      updateGeoCode(locationData);
       loadWeather(lat, lng);
     });
   });
+
+  // we have to be outside the scope to update the variabel this.currentGeoCode
+  updateGeoCode = (locationnData) => { this.currentGeoCode[0] = locationnData; }
 
   // get Location Data
   function getLocationData(lat, lng, callback) {
