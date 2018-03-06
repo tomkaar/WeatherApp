@@ -15,6 +15,7 @@ Create the map and you can for example use ```map.getCurrentLocation()``` to get
 - this.updateLocation - update coordinates
 - this.setMarker - Set a marker on the map + update marker
 - this.moveToLocation - Change position on map (center)
+- this.updateLocation - update current GeoLocation variable 
 - this.getCurrentGeoCode - return current Geo Location
 - this.getCurrentLocation - return currentLocation (lat, lng)
 - this.getCurrentMarker - return/ target current marker set on map

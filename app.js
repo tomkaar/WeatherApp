@@ -281,18 +281,9 @@ function buildWeather(response){
   var menuContainer = newElement("div", "menu", "");
   var detailsContainer = newElement("div", "details", "");
 
-
   for (var i = 0; i < futureDays; i++) {
     let day = sortedDates[allDatesNames[i]];
     let firstDayDate = new Date(day[0].validTime);
-
-    // create menu
-    let thisDay = {
-      "coldest": getColdestTemp(day),
-      "warmest": getWarmestTemp(day),
-      "average": getAverageTemp(day),
-      "mostFrequent": mostFrequent(day)
-    };
 
     // create each date in menu
     var date = newElement("button", "dateTopDate", "");
@@ -307,8 +298,8 @@ function buildWeather(response){
 
     let dateDate = newElement("span", "dateDate", days[firstDayDate.getDay()].substring(0, 3) );
     let dateImg = newElement("div", "dateImg", "");
-    dateImg.classList.add(getImg(thisDay.mostFrequent));
-    let dateAvgTemp = newElement("span", "dateAvgTemp", thisDay.average );
+      dateImg.classList.add(getImg( mostFrequent(day) ));
+    let dateAvgTemp = newElement("span", "dateAvgTemp", getAverageTemp(day) );
 
     // append elements to menu container
     date.appendChild(dateDate);
