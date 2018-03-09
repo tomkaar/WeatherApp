@@ -50,7 +50,6 @@ var weatherCodes = {
   "26": "måttlig snöfall",
   "27": "tung snöfall"
 };
-
 var weather = {
   "klart": [1],
   "molnigt": [6],
@@ -60,10 +59,9 @@ var weather = {
   "blixt": [11, 21],
   "hagel": [12, 13, 14, 22, 23, 24],
   "sno": [15, 16, 17, 25, 26, 27]
-}
+};
 
 // elements
-var build = document.getElementById("weatherBuild");
 var today = document.getElementById("today");
 var future = document.getElementById("future");
 
@@ -72,7 +70,20 @@ var loadLocationMessage = document.getElementById("loadingScreen");
 var errorMessage = document.getElementById("errorMessage");
 var errorMessageText = document.getElementById("errorMessageText");
 
-// default position
+var findMeButton = document.getElementById("findMeButton");
+  findMeButton.addEventListener('click', function(e) {
+    getMyLocation(e.target);
+  });
+  var findMeButton = document.getElementById("findMyLocation");
+    findMeButton.addEventListener('click', function(e) {
+      getMyLocation(e.target);
+    });
+var errorMessageButton = document.getElementById("errorMessageButton");
+  errorMessageButton.addEventListener('click', function(e){
+    hideErrorMessage(e.target);
+  });
+
+// default position (stockholm)
 var defaultPositionlat = 59.334591;
 var defaultPositionlng = 18.063240;
 
@@ -86,6 +97,7 @@ var futureDays = 5;
 // create + init map
 var map = new map("map", 10, true);
 function map(id, zoom, controls){
+
   this.currentLocation = { "lat": defaultPositionlat, "lng": defaultPositionlng};
   this.currentMarker = [];
   this.currentGeoCode = [];
@@ -107,30 +119,25 @@ function map(id, zoom, controls){
   var map = new google.maps.Map(mapContainer, mapProperties);
   var geocoder = new google.maps.Geocoder;
 
-  // When you click on map
-  map.addListener('click', (e) => {
-    this.setLocation(e.latLng.lat(), e.latLng.lng());
-  });
-
   // Set location
   this.setLocation = ((lat, lng, moveTo = false) => {
     this.updateLocation(lat, lng);
     this.setMarker(lat, lng);
     if(moveTo){ this.moveToLocation(lat, lng); }
-    getLocationData(lat, lng, function(locationData) {
-      updateGeoCode(locationData);
-      loadWeather(lat, lng);
-    });
+    getLocationData(lat, lng);
   });
 
-  // we have to be outside the scope to update the variabel this.currentGeoCode
-  updateGeoCode = (locationnData) => { this.currentGeoCode[0] = locationnData; }
+  // When you click on map
+  map.addListener('click', (e) => {
+    this.setLocation(e.latLng.lat(), e.latLng.lng());
+  });
 
   // get Location Data
-  function getLocationData(lat, lng, callback) {
+  function getLocationData(lat, lng) {
     geocoder.geocode({ 'location': {lat: lat, lng: lng} }, function (results, status) {
       if( status == google.maps.GeocoderStatus.OK ) {
-        callback(results[0]);
+        updateGeoCode(results[0]);
+        loadWeather(lat, lng);
       } else {
         today.innerHTML = "No results found.<br>Cannot find geolocation";
         future.innerHTML = "";
@@ -140,6 +147,9 @@ function map(id, zoom, controls){
 
   // Update Location in array
   this.updateLocation = ((lat, lng) => { this.currentLocation = { "lat": lat, "lng": lng} });
+
+  // we have to be outside the scope to update the variabel this.currentGeoCode
+  updateGeoCode = (locationnData) => { this.currentGeoCode[0] = locationnData; }
 
   // set marker
   this.setMarker = ((lat, lng) => {
@@ -164,9 +174,9 @@ function map(id, zoom, controls){
 
 
 // find users current location
-// getMyLocation();
+getMyLocation();
 function getMyLocation() {
-  if (navigator.geolocation) {
+  if(navigator.geolocation){
     loadLocationMessage.classList.add("visible");
     navigator.geolocation.getCurrentPosition(function(position){
       map.setLocation(position.coords.latitude, position.coords.longitude, true);
@@ -215,9 +225,14 @@ async function loadWeather(lat, lng){
   let lat2 = lat.toFixed(6);
   let lng2 = lng.toFixed(6);
   let url = 'https://opendata-download-metfcst.smhi.se/api/category/pmp3g/version/2/geotype/point/lon/'+lng2+'/lat/'+lat2+'/data.json';
-  let promise = await fetch(url).then( async function(data){
+  await fetch(url)
+  .then( async function(data){
     let response = await data.json();
     buildWeather(response);
+  })
+  .catch( async function(error){
+    today.innerHTML = "Error: " + error;
+    future.innerHTML = "";
   });
 }
 
@@ -248,6 +263,8 @@ function buildWeather(response){
       sortedDates[dateCut].push(response.timeSeries[i]);
     }
   }
+
+  // console.log(sortedDates[allDatesNames[0]]);
 
   // Create Today
   let today_date = new Date();

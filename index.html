@@ -11,7 +11,7 @@
 
     <div id="map"></div>
 
-    <button onclick="getMyLocation()" class="findMeBtn">Current Position</button>
+    <button id="findMeButton" class="findMeBtn">Current Position</button>
 
     <div id="loadingScreen" class="loadingScreen">
       <div class="lsContent">
@@ -27,13 +27,13 @@
     <div id="content">
       <div id="errorMessage" class="errorMessage">
         <p id="errorMessageText"></p>
-        <button id="errorMessageButton" onclick="hideErrorMessage(this)">Close</button>
+        <button id="errorMessageButton">Close</button>
       </div>
 
       <div id="weatherBuild">
         <div id="today" class="today">
           Click on the map or <br>
-          <button onclick="getMyLocation()">Find my Location</button>
+          <button id="findMyLocation">Find my Location</button>
         </div>
         <div id="future" class="future"></div>
       </div>
