@@ -1,47 +1,45 @@
 <!DOCTYPE html>
-<html>
-  <head>
-    <title>Weather</title>
-    <meta name="viewport" content="initial-scale=1.0, user-scalable=no">
-    <meta charset="utf-8">
-    <link href="https://fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet">
-    <link rel="stylesheet" href="style.css">
-  </head>
-  <body>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Document</title>
 
-    <div id="map"></div>
+  <link type="text/css" rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700">
 
-    <button id="findMeButton" class="findMeBtn">Current Position</button>
+  <link rel="stylesheet" href="style/style.css">
 
-    <div id="loadingScreen" class="loadingScreen">
-      <div class="lsContent">
-        <p>Finding your location</p>
-        <div class="spinner spinner-20">
-          <span></span>
-          <span></span>
-          <span></span>
-        </div>
-      </div>
+  <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBDo7tpI5x9bSchjR1bdIW66_CRbHcicyU" defer></script>
+
+  <script src="modules/default.js" defer></script>
+  <script src="modules/helper.js" defer></script>
+
+  <script src="modules/GetLocation.js" defer></script>
+  <script src="modules/GetAPI.js" defer></script>
+
+  <script src="modules/mapStyle.js" defer></script>
+  <script src="modules/map.js" defer></script>
+
+  <script src="modules/text.js" defer></script>
+  <script src="modules/build.js" defer></script>
+
+  <script src="app.js" defer></script>
+</head>
+<body>
+
+  <div id="map" class="map"></div>
+
+  <div id="content" class="content">
+    <div id="today" class="today">
+      <p class="today_temp" id="today_temp"></p>
+      <p class="today_type" id="today_type"></p>
+      <p class="today_location" id="today_location"></p>
+      <p class="today_date" id="today_date"></p>
     </div>
+    <div id="menu" class="menu"></div>
+    <div id="details" class="details"></div>
+  </div>
 
-    <div id="content">
-      <div id="errorMessage" class="errorMessage">
-        <p id="errorMessageText"></p>
-        <button id="errorMessageButton">Close</button>
-      </div>
-
-      <div id="weatherBuild">
-        <div id="today" class="today">
-          Click on the map or <br>
-          <button id="findMyLocation">Find my Location</button>
-        </div>
-        <div id="future" class="future"></div>
-      </div>
-    </div>
-
-    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBDo7tpI5x9bSchjR1bdIW66_CRbHcicyU"></script>
-    <script src="mapstyle.js"></script>
-    <script src="app.js"></script>
-
-  </body>
+</body>
 </html>
