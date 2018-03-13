@@ -404,7 +404,7 @@ function buildWeather(response){
 
   // get the right weather image
   function getImg(i) {
-    if(weather.klart.includes(i)){ return 'sun'; }
+    if(weather.klart.includes(i)){ return 'Sun'; }
     else if(weather.molnigt.includes(i)){ return 'Cloud'; }
     else if(weather.latt_molnigt.includes(i)){ return 'CloudLight'; }
     else if(weather.dimma.includes(i)){ return 'Fog'; }
