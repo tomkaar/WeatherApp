@@ -35,20 +35,37 @@ var build = ( function(){
   }
 
   function publicDayMenu(data) {
-    console.log(data);
 
     let averageTemp = helper.averageTemp(data);
     let mostFrequent = helper.mostFrequent(data);
 
     return{
       "averageTemp": averageTemp,
-      "mostFrequent": mostFrequent
+      "mostFrequent": mostFrequent,
+      "weatherImg": text.getWeatherImg(mostFrequent)
     }
 
   }
 
   function publicDayDetails(data){
 
+    let temp = data.parameters.filter( filter => filter.name == "t")[0].values[0];
+    let type = data.parameters.filter( filter => filter.name == "Wsymb2")[0].values[0];
+    let time = new Date(data.validTime);
+
+    return {
+      "temp": temp,
+      "name": text.getWeatherName(type),
+      "img": text.getWeatherImg(type),
+      "time": helper.addZero(time.getHours()) + ":00"
+    }
+  }
+
+  function publicCreateElement(element, thisClass, content){
+    let el = document.createElement(element);
+    el.classList.add(thisClass);
+    el.innerHTML = content;
+    return el;
   }
 
   function publicClear() {
@@ -63,6 +80,7 @@ var build = ( function(){
     rightNow: publicRightNow,
     dayMenu: publicDayMenu,
     dayDetails: publicDayDetails,
+    createElement: publicCreateElement,
     clear: publicClear
   }
 })();

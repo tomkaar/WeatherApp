@@ -85,7 +85,7 @@ var text = ( function(){
     getMonth: publicGetMonth,
     getWeatherName: publicGetWeatherName,
     getWeatherType: publicGetWeatherType,
-    getWeatherImg: publicGetWeatherImg
+    getWeatherImg: publicGetWeatherImg,
   }
 
 })();

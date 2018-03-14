@@ -51,3 +51,118 @@ html, body{
     text-transform: capitalize;
   }
 }
+
+
+.menu{
+  width: 100%;
+  margin: 50px 0 25px 0;
+  text-align: center;
+
+  .menu-item{
+    display: inline-block;
+    width: 100px;
+    margin: 0 5px 0 5px;
+    padding: 20px 0 10px 0;
+    cursor: pointer;
+
+    &:hover {
+      background: pink;
+    }
+  }
+}
+
+.Sun{ background: url(../img/sun.svg); }
+.Cloud{ background: url(../img/cloud.svg); }
+.CloudLight{ background: url(../img/cloud-light.svg); }
+.Rain{ background: url(../img/rain.svg); }
+.Fog{ background: url(../img/fog.svg); }
+.Lightning{ background: url(../img/lightning.svg); }
+.Snow{ background: url(../img/snow.svg); }
+.Hail{ background: url(../img/hail.svg); }
+
+.menu-temp, .menu-img, .menu-day{
+  width: 100%;
+  min-height: 20px;
+  pointer-events: none;
+}
+.menu-img{
+  width: 40px;
+  height: 40px;
+  margin-left: 30px;
+  margin-top: 10px;
+  margin-bottom: 10px;
+  background-size: 100%;
+  background-repeat: no-repeat;
+  background-position: center;
+}
+.menu-temp{
+  font-size: 15px;
+  color: #565656;
+  line-height: 15px;
+  padding: 0 0 5px 0;
+}
+.menu-date{
+  font-size: 15px;
+  color: #565656;
+  line-height: 15px;
+}
+
+.detailContainer{
+  display: none;
+
+  &.visible{
+    display: block;
+  }
+}
+
+.details-item{
+  width: 100%;
+  padding: 10px 0 10px 15px;
+  border-bottom: 1px solid #eee;
+  overflow: auto;
+
+  .details-textContainer{
+    float: left;
+    width: calc(100% - 120px);
+    padding: 0 10px 0 10px;
+
+    .details-time{
+      padding: 5px 0 0 0;
+      font-size: 17px;
+    }
+    .details-name{
+      font-size: 13px;
+      color: #565656;
+      text-transform: capitalize;
+    }
+  }
+  .details-img{
+    float: left;
+    width: 40px;
+    height: 40px;
+  }
+  .details-temp{
+    float: left;
+    width: 80px;
+    height: 40px;
+    padding: 10px;
+    font-size: 17px;
+    text-align: center;
+  }
+}
+
+
+
+@media screen and (min-width: 768px) {
+  .map{
+    float: left;
+    width: calc(100% - 600px);
+    height: 100vh;
+  }
+  .content{
+    float: left;
+    width: 600px;
+    height: 100vh;
+    overflow: scroll;
+  }
+}
