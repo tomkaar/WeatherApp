@@ -3,12 +3,13 @@ var app = ( function(){
   var map = new Map("map", 10, true);
 
   async function publicStart(){
+    loadingScreen.show();
     var myLocation = await loc.getMyLocation();
     if(myLocation.status == true){
       map.update(myLocation.lat, myLocation.lng, true);
     }
     else if (myLocation.status == false) {
-      console.log(myLocation.message);
+      error.show( myLocation.message );
       map.update(defaults.getLat(), defaults.getLng(), true);
     }
   }
@@ -27,9 +28,21 @@ var app = ( function(){
     let today = sorted.dates[sorted.names[0]][0];
     build.rightNow(map, today);
 
+
     // each day
     for (var i = 0; i < defaults.days(); i++) {
       let thisDay = sorted.dates[sorted.names[i]];
+
+      // get date names
+      var todayName;
+      if(i == 0){
+        todayName = "Idag";
+      } else {
+        var currentDate = new Date();
+        currentDate.setDate(currentDate.getDate() + i);
+        let thisDate = currentDate.getDay();
+        todayName = text.getDay(thisDate).substring(0,3);
+      }
 
       // create menu
       let day_info = build.dayMenu(thisDay);
@@ -39,11 +52,13 @@ var app = ( function(){
       detailContainer.classList.add("detailContainer");
 
       let newEle = build.createElement("div", "menu-item", "");
-      newEle.addEventListener('click', function(){
+      newEle.addEventListener('click', function(m){
+        let allMenuItems = document.querySelectorAll(".menu-item");
+        allMenuItems.forEach( function(e){ e.classList.remove("active"); });
+        m.target.classList.add("active");
+
         let allContainers = document.querySelectorAll(".detailContainer");
-        allContainers.forEach( function(e){
-          e.classList.remove("visible");
-        });
+        allContainers.forEach( function(e){ e.classList.remove("visible"); });
         detailContainer.classList.add("visible");
       });
 
@@ -51,7 +66,7 @@ var app = ( function(){
       let newEleImg = build.createElement("div", "menu-img", "");
       newEleImg.classList.add(day_info.weatherImg);
       newEleImg.classList.add("menu-img");
-      let newEleDay = build.createElement("p", "menu-day", "day");
+      let newEleDay = build.createElement("p", "menu-day", todayName);
 
       newEle.append(newEleDay);
       newEle.append(newEleImg);
@@ -94,6 +109,9 @@ var app = ( function(){
         details.append(detailContainer);
       } // end of detail view
     } // end of each day
+
+    // after everything is loaded, hide the loading screen
+    loadingScreen.hide();
   } // end of build function
 
   return{
@@ -102,4 +120,4 @@ var app = ( function(){
   }
 })();
 
-// app.start();
+app.start();

@@ -59,15 +59,29 @@ html, body{
   text-align: center;
 
   .menu-item{
+    position: relative;
     display: inline-block;
     width: 100px;
     margin: 0 5px 0 5px;
-    padding: 20px 0 10px 0;
+    padding: 20px 0 20px 0;
     cursor: pointer;
 
     &:hover {
-      background: pink;
+      background: rgba(241, 240, 241, 0.53);
     }
+    &.active{
+
+      &:after{
+        position: absolute;
+        content: "";
+        display: block;
+        bottom: 0;
+        width: 100%;
+        height: 3px;
+        background: lightblue;
+      }
+    }
+
   }
 }
 
@@ -109,6 +123,7 @@ html, body{
 
 .detailContainer{
   display: none;
+  padding: 0 25px 50px 25px;
 
   &.visible{
     display: block;
@@ -120,6 +135,11 @@ html, body{
   padding: 10px 0 10px 15px;
   border-bottom: 1px solid #eee;
   overflow: auto;
+  transition: 0.2s all ease;
+
+  &:hover{
+    background: rgba(241, 240, 241, 0.53);
+  }
 
   .details-textContainer{
     float: left;
@@ -127,10 +147,11 @@ html, body{
     padding: 0 10px 0 10px;
 
     .details-time{
-      padding: 5px 0 0 0;
+      padding: 3px 0 0 0;
       font-size: 17px;
     }
     .details-name{
+      padding: 2px 0 0 0;
       font-size: 13px;
       color: #565656;
       text-transform: capitalize;
@@ -153,6 +174,129 @@ html, body{
 
 
 
+.error{
+  display: none;
+  width: calc(100% - 32px);
+  margin: 17px;
+  padding: 17px;
+  color: #565656;
+  background: #97e1f2;
+  overflow: auto;
+
+  &.visible{
+    display: block;
+  }
+
+  p{
+    width: calc(100% - 50px);
+    float: left;
+  }
+  button{
+    -webkit-appearance: none;
+    float: left;
+    width: 50px;
+    padding: 4px;
+    color: black;
+    font-size: 15px;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+  }
+}
+
+
+.loadingScreen {
+  position: fixed;
+  display: none;
+  z-index: 10000;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+
+  &.visible{
+    display: block;
+
+    .lsContent{
+      display: -webkit-box;
+      align-items: center;
+      flex-wrap: nowrap;
+      flex-direction: column;
+      justify-content: center;
+    }
+  }
+
+  .lsContent{
+    position: absolute;
+    height: 100%;
+    width: 100%;
+    background: white;
+    left: 0;
+  }
+
+}
+
+
+.spinner {
+  width: 100px;
+  height: 75px;
+  background: #eee;
+  border-radius: 50%;
+  position: relative;
+  margin: 0px;
+  display: inline-block;
+
+  &.before{
+
+  }
+}
+.spinner-20 {
+  background: transparent;
+
+  span {
+    display: block;
+    position: absolute;
+    border-radius: 50%;
+    width: 20px;
+    height: 20px;
+    bottom: 30px;
+    background: #97e1f2;
+
+    &:first-child {
+      animation: s20 2s ease-in-out infinite;
+      left: 0;
+    }
+    &:nth-child(2) {
+      animation: s20 2s ease-in-out 0.66s infinite;
+      left: 30px;
+      opacity: 0.4;
+    }
+    &:nth-child(3) {
+      animation: s20 2s ease-in-out 1.33s infinite;
+      left: 60px;
+      opacity: 0.4;
+    }
+  }
+}
+
+@keyframes s20{
+    0%{
+      opacity: 0.4;
+    }
+    33.333%{
+      opacity: 1;
+    }
+    66.666%{
+      opacity: 0.4;
+    }
+    100%{
+      opacity: 0.4;
+    }
+  }
+
+
+
+
 @media screen and (min-width: 768px) {
   .map{
     float: left;
@@ -164,5 +308,10 @@ html, body{
     width: 600px;
     height: 100vh;
     overflow: scroll;
+  }
+
+  .loadingScreen .lsContent{
+    width: 600px;
+    left: calc(100% - 600px);
   }
 }

@@ -4,7 +4,9 @@ var helper = ( function(){
 
   function publicAverageTemp(loc) {
     let all = [];
-    loc.forEach( function(e){ all.push(e.parameters[1].values[0]); });
+    loc.forEach( function(e){
+      all.push(e.parameters.filter( filter => filter.name == "t")[0].values[0]);
+    });
     let thisDay = all.reduce((total, value) => total += value);
     return (thisDay/all.length).toFixed(1);
   }

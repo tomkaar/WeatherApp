@@ -59,6 +59,7 @@ var build = ( function(){
       "img": text.getWeatherImg(type),
       "time": helper.addZero(time.getHours()) + ":00"
     }
+
   }
 
   function publicCreateElement(element, thisClass, content){

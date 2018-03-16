@@ -13,6 +13,7 @@
   <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBDo7tpI5x9bSchjR1bdIW66_CRbHcicyU" defer></script>
 
   <script src="modules/default.js" defer></script>
+  <script src="modules/message.js" defer></script>
   <script src="modules/helper.js" defer></script>
 
   <script src="modules/GetLocation.js" defer></script>
@@ -30,7 +31,24 @@
 
   <div id="map" class="map"></div>
 
+  <div id="loadingScreen" class="loadingScreen">
+    <div class="lsContent">
+      <p>Finding your location</p>
+      <div class="spinner spinner-20">
+        <span></span>
+        <span></span>
+        <span></span>
+      </div>
+    </div>
+  </div>
+
   <div id="content" class="content">
+
+    <div id="error" class="error">
+      <p id="errorMessage"></p>
+      <button id="errorMessageBtn" onclick="error.buttonHideError(this)">Close</button>
+    </div>
+
     <div id="today" class="today">
       <p class="today_temp" id="today_temp"></p>
       <p class="today_type" id="today_type"></p>

@@ -43,6 +43,7 @@ class Map {
   // update functions
     // main function that updates everything
     async update(lat, lng, moveTo = false){
+      loadingScreen.show();
       this.updateProperties(lat, lng);
       if(moveTo){ this.mapCenter(lat, lng); }
     }
